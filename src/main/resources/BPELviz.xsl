@@ -187,6 +187,16 @@
                 <xsl:value-of select="."/>
                 </div>
             </xsl:when>
+            <xsl:when test="$name='forEach'">
+                <div class="bpel_name">
+                <xsl:value-of select="."/>
+                </div>
+            </xsl:when>
+            <xsl:when test="$name='scope'">
+                <div class="bpel_name">
+                <xsl:value-of select="."/>
+                </div>
+            </xsl:when>
             <xsl:when test="$name='pick'">
                 <div class="bpel_name">
                 <xsl:value-of select="."/>
@@ -194,12 +204,42 @@
             </xsl:when>
             <xsl:otherwise>
                 <div class="bpel_name">
-                <span class="glyphicon glyphicon-ok icone"></span>&#160;
-                <xsl:value-of select="."/>
+                  <div class="row">
+                    <div class="col-xs-1">
+                        <xsl:choose>
+                            <xsl:when test="$name='assign'">
+                                <span class="glyphicon glyphicon-arrow-right"></span>
+                            </xsl:when>
+                            <xsl:when test="$name='reply'">
+                                <span class="glyphicon glyphicon-cloud-upload"></span>
+                            </xsl:when>
+                            <xsl:when test="$name='receive'">
+                                <span class="glyphicon glyphicon-cloud-download"></span>
+                            </xsl:when>
+                            <xsl:when test="$name='invoke'">
+                                <span class="glyphicon glyphicon-transfer"></span>
+                            </xsl:when>
+                            <xsl:when test="$name='exit'">
+                                <span class="glyphicon glyphicon-stop"></span>
+                            </xsl:when>
+                            <xsl:when test="$name='if'">
+                                <span class="glyphicon glyphicon-filter"></span>
+                            </xsl:when>
+                            <xsl:otherwise>
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </xsl:otherwise>
+                        </xsl:choose>
+                    </div>
+                    <div class="col-xs-8">
+                        <xsl:value-of select="."/>
+                    </div>
+                    <div class="col-xs-1">
+                        <span class="glyphicon glyphicon-ok icone"></span>
+                    </div>
+                  </div>
                 </div>
             </xsl:otherwise>
         </xsl:choose>
-        
     </xsl:template>
 
     <!-- Override default template for copying text -->
@@ -235,8 +275,5 @@
     <xsl:template match="text()" mode="serialize">
         <xsl:value-of select="."/>
     </xsl:template>
-    
-    
-
 
 </xsl:stylesheet>
