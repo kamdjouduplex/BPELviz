@@ -5,8 +5,8 @@
                 xmlns:xdt="http://www.w3.org/2005/xpath-datatypes"
                 xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
                 xmlns:bpelviz="http://github.com/BPELtools/BPELviz"
-                xmlns:math="http://exslt.org/math"
-                extension-element-prefixes="math">
+                xmlns:math="java.lang.Math"
+                exclude-result-prefixes="math">
 
     <xsl:import href="BPELviz-id-handling.xsl" />
 
@@ -129,20 +129,52 @@
     </xsl:template>
 
     <xsl:template match="attribute::name">
-        <!-- random variables generation -->
+        <!-- random variables generation
         <xsl:variable name="rand">
-            <xsl:value-of select="(floor(math:random()*5) mod 5) + 1" />
+            <xsl:value-of select="math:random()*10" />
         </xsl:variable>
-
-        <!-- changing icon randomlly -->
-        <xsl:variable name="icons">
-            <xsl:choose>
-                <xsl:when test="$rand='0'">
+        
+        changing icon randomlly
+        <xsl:choose>
+            <xsl:when test="$rand='0'">
+                <xsl:variable name="icon">
                     <xsl:value-of select="glyphicon glyphicon-off"
-                        disable-output-escaping="yes"/>
-                </xsl:when>
-            </xsl:choose>
-        </xsl:variable>
+                        disable-output-escaping="yes"/>    
+                </xsl:variable>        
+            </xsl:when>
+            <xsl:when test="$rand='1'">
+                <xsl:variable name="icon">
+                    <xsl:value-of select="glyphicon glyphicon-warning-sign"
+                        disable-output-escaping="yes"/>    
+                </xsl:variable>        
+            </xsl:when>
+            <xsl:when test="$rand='2'">
+                <xsl:variable name="icon">
+                    <xsl:value-of select="glyphicon glyphicon-pause"
+                        disable-output-escaping="yes"/>    
+                </xsl:variable>        
+            </xsl:when>
+            <xsl:when test="$rand='3'">
+                <xsl:variable name="icon">
+                    <xsl:value-of select="glyphicon glyphicon-ok icone"
+                        disable-output-escaping="yes"/>    
+                </xsl:variable>        
+            </xsl:when>
+            <xsl:when test="$rand='2'">
+                <xsl:variable name="icon">
+                    <xsl:value-of select="glyphicon glyphicon-cog"
+                        disable-output-escaping="yes"/>    
+                </xsl:variable>        
+            </xsl:when> 
+            <xsl:otherwise>
+                <xsl:variable name="icon">
+                    <xsl:value-of select="glyphicon glyphicon-ok icone"
+                        disable-output-escaping="yes"/>    
+                </xsl:variable>
+            </xsl:otherwise>       
+        </xsl:choose> -->
+            
+        
         <xsl:variable name="name" select="./name(..)"/>
         <xsl:choose>
             <xsl:when test="$name='process'">
