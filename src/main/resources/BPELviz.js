@@ -1,3 +1,34 @@
+//jsblomp code goes here
+
+jsPlumb.bind("ready", function() {          
+  // your jsPlumb related init code goes here
+  var firstInstance = jsPlumb.getInstance();
+    firstInstance.importDefaults({
+      Connector : [ "Straight", { curviness: 150 } ],
+      Anchors : [ "BottomCenter", "TopCenter" ]
+    });
+
+    firstInstance.connect({
+      source:"start", 
+      target:"pr-1.sq-1", 
+      scope:"someScope" 
+    });
+
+    var secondInstance = jsPlumb.getInstance();
+      secondInstance.importDefaults({
+        Connector : [ "Straight", { curviness: 150 } ],
+        Anchors : [ "BottomCenter", "TopCenter" ]
+      });
+    secondInstance.connect({ 
+      source:"pr-1.sq-1", 
+      target:"end", 
+      scope:"someScope"   
+    });
+});
+
+
+
+
 // AMD and non-AMD compatiblitiy inspired by http://tkareine.org/blog/2012/08/11/why-javascript-needs-module-definitions/ and https://github.com/blueimp/jQuery-File-Upload/blob/9.5.0/js/jquery.fileupload.js
 (function(factory) {
     if (typeof define === 'function' && define.amd) {

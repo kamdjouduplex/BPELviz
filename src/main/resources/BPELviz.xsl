@@ -5,7 +5,8 @@
                 xmlns:xdt="http://www.w3.org/2005/xpath-datatypes"
                 xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
                 xmlns:bpelviz="http://github.com/BPELtools/BPELviz"
-                >
+                xmlns:math="http://exslt.org/math"
+                extension-element-prefixes="math">
 
     <xsl:import href="BPELviz-id-handling.xsl" />
 
@@ -23,13 +24,13 @@
     <xsl:template match="/bpel:process">
         <html>
             <head>
-                <title>BPELviz</title>
+                <title>Visual</title>
                 <meta charset="utf-8"/>
 
                 <!-- latest release is 3.0.83. That does not play well with requirejs. Therefore, everything of SyntaxHighlighter is loaded before requirejs -->
                 <script src="http://alexgorbatchev.com/pub/sh/3.0.83/scripts/shCore.js" type="text/javascript"></script>
                 <script src="http://alexgorbatchev.com/pub/sh/3.0.83/scripts/shBrushXml.js" type="text/javascript"></script>
-
+                <script src="dom.jsPlumb-1.7.5.js"></script>
                 <script src="http://requirejs.org/docs/release/2.1.9/minified/require.js"></script>
                 <script>
                     require.config({
@@ -52,31 +53,20 @@
 
             </head>
             <body>
-                <div id="processContainer">
-                    <div class="bpel_process bpel">
-                        <xsl:apply-templates select="@* | node()"/>
-                    </div>
-                </div>
-
-                <xsl:variable name="xml-serialization-full"><xsl:apply-templates mode='serialize' select='.'/></xsl:variable>
-
-                <div id="tabContainer">
-                    <!-- Nav tabs -->
-                    <ul class="nav nav-tabs" id="SourceTabs">
-                        <li class="active"><a href="#SourceExtractTab" data-toggle="tab">Source Extract</a></li>
-                        <li><a href="#FullSourceTab" data-toggle="tab">Full Source</a></li>
-                    </ul>
-
-                    <!-- Tab panes -->
-                    <div class="tab-content">
-                        <div class="tab-pane active" id="SourceExtractTab">Click on an element to show its source</div>
-                        <div class="tab-pane" id="FullSourceTab">
-                            <div id="FullSource">
-                                <pre class="brush: xml"><xsl:value-of select="$xml-serialization-full" /></pre>
+                <div class="row">
+                    <div class="col-md-4 col-md-offset-4"><br/>
+                        <div id="processContainer">
+                            <div class="bpel_process bpel">
+                                <div id="start" class="start_dot bpel"><br/>start</div>
+                                <xsl:apply-templates select="@* | node()"/>
+                                <div id="end" class="end_dot bpel"><br/>end</div>
                             </div>
                         </div>
                     </div>
                 </div>
+                <xsl:variable name="xml-serialization-full">
+                    <xsl:apply-templates mode='serialize' select='.'/></xsl:variable>
+
                 <script>
                     require(["BPELviz"], function(renderer) {
                         renderer.initialize();
@@ -109,7 +99,9 @@
     </xsl:template>
 
     <xsl:template match="bpel:*">
-        <xsl:variable name="xml-serialization-full"><xsl:apply-templates mode='serialize' select='.'/></xsl:variable>
+        <xsl:variable name="xml-serialization-full">
+            <xsl:apply-templates mode='serialize' select='.'/>
+        </xsl:variable>
         <xsl:variable name="lines" select="tokenize($xml-serialization-full, $line-break)"/>
         <xsl:variable name="xml-serialization">
             <xsl:variable name="line-numbers" as="xs:integer" select="count($lines)"/>
@@ -127,7 +119,7 @@
         </xsl:variable>
         <div id="{bpelviz:deriveIdentifier(.)}" class="bpel bpel_{fn:local-name()}">
             <!-- TODO: show buttons only at activities -->
-            <button class="btn btn-sm collapseExpandToggleBtn glyphicon glyphicon-minus"></button>
+            <!-- <button class="btn btn-sm collapseExpandToggleBtn glyphicon glyphicon-minus"></button> -->
             <div class="content"><xsl:apply-templates select="@* | node()"/></div>
         </div>
         <div id="source-{bpelviz:deriveIdentifier(.)}" class="dotted_source">
@@ -137,9 +129,45 @@
     </xsl:template>
 
     <xsl:template match="attribute::name">
-        <div class="bpel_name">
-            <xsl:value-of select="."/>
-        </div>
+        <!-- random variables generation -->
+        <xsl:variable name="rand">
+            <xsl:value-of select="(floor(math:random()*5) mod 5) + 1" />
+        </xsl:variable>
+
+        <!-- changing icon randomlly -->
+        <xsl:variable name="icons">
+            <xsl:choose>
+                <xsl:when test="$rand='0'">
+                    <xsl:value-of select="glyphicon glyphicon-off"
+                        disable-output-escaping="yes"/>
+                </xsl:when>
+            </xsl:choose>
+        </xsl:variable>
+        <xsl:variable name="name" select="./name(..)"/>
+        <xsl:choose>
+            <xsl:when test="$name='process'">
+                <div class="bpel_name">
+                <xsl:value-of select="."/>
+                </div>
+            </xsl:when>
+            <xsl:when test="$name='flow'">
+                <div class="bpel_name">
+                <xsl:value-of select="."/>
+                </div>
+            </xsl:when>
+            <xsl:when test="$name='pick'">
+                <div class="bpel_name">
+                <xsl:value-of select="."/>
+                </div>
+            </xsl:when>
+            <xsl:otherwise>
+                <div class="bpel_name">
+                <span class="glyphicon glyphicon-ok icone"></span>&#160;
+                <xsl:value-of select="."/>
+                </div>
+            </xsl:otherwise>
+        </xsl:choose>
+        
     </xsl:template>
 
     <!-- Override default template for copying text -->
@@ -163,6 +191,7 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
     <xsl:template match="@*" mode="serialize">
         <xsl:text> </xsl:text>
         <xsl:value-of select="name()"/>
@@ -170,6 +199,7 @@
         <xsl:value-of select="."/>
         <xsl:text>"</xsl:text>
     </xsl:template>
+
     <xsl:template match="text()" mode="serialize">
         <xsl:value-of select="."/>
     </xsl:template>

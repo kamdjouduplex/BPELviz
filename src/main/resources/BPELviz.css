@@ -1,4 +1,42 @@
 /* UI */
+
+
+div.start_dot{
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: green;
+}
+
+div.end_dot{
+  margin-left: auto;
+  margin-right: auto;
+  color: white;
+  text-align: center;
+  margin-top: 50px;
+  margin-bottom: 10px;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  border: 2 solid gray;
+  background-color: black;
+}
+
+.icone{
+    width:25px;
+    height:25px;
+    background: green;
+    padding: 3px;
+    border-radius: 100%;
+    color: white;
+    text-align:center
+}
 div.dotted_source {
   display: none; }
 
@@ -233,6 +271,8 @@ div.bpel_while:before {
 div.bpel_name {
   text-overflow: ellipsis;
   display: inline-block;
+  padding-bottom: 10px;
+  padding-top: 5px;
   /* line below name, currently not used
       // this line does not work together with the above
       overflow: hidden;
