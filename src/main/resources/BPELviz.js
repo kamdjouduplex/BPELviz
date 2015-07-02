@@ -70,6 +70,15 @@ jsPlumb.bind("ready", function() {
             return false;
         });
 
+        //manipulating id of components
+        $("div.content").on("load", function(e) {
+            var element = $(e.delegateTarget);
+            var bpelElement = element.parent();
+            console.log(element);
+            // no more further event handling
+            return false;
+        });
+
         // initialize tabs
         $('#SourceTabs a').click(function (e) {
             e.preventDefault();

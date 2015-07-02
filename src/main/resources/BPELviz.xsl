@@ -30,7 +30,7 @@
                 <!-- latest release is 3.0.83. That does not play well with requirejs. Therefore, everything of SyntaxHighlighter is loaded before requirejs -->
                 <script src="http://alexgorbatchev.com/pub/sh/3.0.83/scripts/shCore.js" type="text/javascript"></script>
                 <script src="http://alexgorbatchev.com/pub/sh/3.0.83/scripts/shBrushXml.js" type="text/javascript"></script>
-                <script src="dom.jsPlumb-1.7.5.js"></script>
+                <script src="dom.jsPlumb-1.7.5-min.js"></script>
                 <script src="http://requirejs.org/docs/release/2.1.9/minified/require.js"></script>
                 <script>
                     require.config({
