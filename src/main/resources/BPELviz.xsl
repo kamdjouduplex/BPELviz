@@ -53,8 +53,35 @@
 
             </head>
             <body>
+            <div class="container">
                 <div class="row">
-                    <div class="col-md-4 col-md-offset-4"><br/>
+                    <div class="col-md-3 ">
+                        <br/>
+                     
+                        <div class="panel panel-success">
+                          <div class="panel-heading">
+                            <h3 class="panel-title">How it works</h3>
+                          </div>
+                          <div class="panel-body">
+                            just click on any acitivity and get more details about it in the panel below.
+                            Thanks!
+                          </div>
+                        </div>
+                        <br/>
+                        <div class="panel panel-info">
+                          <div class="panel-heading">
+                            <h3 id="title" class="panel-title"></h3>
+                          </div>
+                          <div class="panel-body">
+                            <strong >Time: </strong><p id="time"></p>
+                            <strong >Status: </strong><p>Completed</p>
+                            <strong >More: </strong><p >Some text</p>
+                            
+                          </div>
+                        </div>
+                    </div>
+                    
+                    <div class="col-md-8 "><br/>
                         <div id="processContainer">
                             <div class="bpel_process bpel">
                                 <div id="start" class="start_dot bpel"><br/>start</div>
@@ -64,6 +91,9 @@
                         </div>
                     </div>
                 </div>
+            </div>
+                
+
                 <xsl:variable name="xml-serialization-full">
                     <xsl:apply-templates mode='serialize' select='.'/></xsl:variable>
 

@@ -37,6 +37,14 @@ div.end_dot{
     color: white;
     text-align:center
 }
+
+.sidebar {
+  position: fixed;
+    top:40px ;
+    left: auto;
+}    
+
+
 div.dotted_source {
   display: none; }
 

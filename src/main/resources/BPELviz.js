@@ -85,11 +85,32 @@ jsPlumb.bind("ready", function() {
             $(this).tab('show');
         })
 
-        // enable click on elements
+        // enable mouseover on elements
         $(".bpel").on("click", function(event) {
             // determine id of element
             var target = $(event.delegateTarget);
-            var id = target.attr("id");
+            var id = target.attr("class");
+            var res = id.split(' ', 2);
+            var elName = res.slice(-1)[0];
+            var activityName = (elName.split('_', 2)).slice(-1)[0];
+            if(elName.indexOf('_') == -1){
+              activityName = "process";
+            }
+            document.getElementById("title").innerHTML = activityName;
+
+            // For todays date;
+            Date.prototype.today = function () { 
+                return ((this.getDate() < 10)?"0":"") + this.getDate() +"/"+(((this.getMonth()+1) < 10)?"0":"") + (this.getMonth()+1) +"/"+ this.getFullYear();
+            }
+
+            // For the time now
+            Date.prototype.timeNow = function () {
+                 return ((this.getHours() < 10)?"0":"") + this.getHours() +":"+ ((this.getMinutes() < 10)?"0":"") + this.getMinutes() +":"+ ((this.getSeconds() < 10)?"0":"") + this.getSeconds();
+            }
+            var newDate = new Date();
+            var datetime = "On: " + newDate.today() + " at " + newDate.timeNow();
+
+            document.getElementById("time").innerHTML = datetime;
 
             /* show source in "Source Extract" tab */
             var sourceId = "source-" + id;
