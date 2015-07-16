@@ -82,6 +82,8 @@
                     </div>
                     
                     <div class="col-md-8 "><br/>
+                    <div class="row scrollable">
+                    <div class="col-md-8 col-md-offset-3">
                         <div id="processContainer">
                             <div class="bpel_process bpel">
                                 <div id="start" class="start_dot bpel"><br/>start</div>
@@ -89,6 +91,8 @@
                                 <div id="end" class="end_dot bpel"><br/>end</div>
                             </div>
                         </div>
+                    </div>
+                    </div>
                     </div>
                 </div>
             </div>
@@ -150,7 +154,7 @@
         <div id="{bpelviz:deriveIdentifier(.)}" class="bpel bpel_{fn:local-name()}">
             <!-- TODO: show buttons only at activities -->
             <!-- <button class="btn btn-sm collapseExpandToggleBtn glyphicon glyphicon-minus"></button> -->
-            <div class="content"><xsl:apply-templates select="@* | node()"/></div>
+            <div id="parent" class="content"><xsl:apply-templates select="@* | node()"/></div>
         </div>
         <div id="source-{bpelviz:deriveIdentifier(.)}" class="dotted_source">
             <!-- gutter:false -> don't display line numbers. Required, because line counting currently always starts at one -->

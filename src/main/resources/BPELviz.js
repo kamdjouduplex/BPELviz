@@ -1,34 +1,3 @@
-//jsblomp code goes here
-
-jsPlumb.bind("ready", function() {          
-  // your jsPlumb related init code goes here
-  var firstInstance = jsPlumb.getInstance();
-    firstInstance.importDefaults({
-      Connector : [ "Straight", { curviness: 150 } ],
-      Anchors : [ "BottomCenter", "TopCenter" ]
-    });
-
-    firstInstance.connect({
-      source:"start", 
-      target:"pr-1.sq-1", 
-      scope:"someScope" 
-    });
-
-    var secondInstance = jsPlumb.getInstance();
-      secondInstance.importDefaults({
-        Connector : [ "Straight", { curviness: 150 } ],
-        Anchors : [ "BottomCenter", "TopCenter" ]
-      });
-    secondInstance.connect({ 
-      source:"pr-1.sq-1", 
-      target:"end", 
-      scope:"someScope"   
-    });
-});
-
-
-
-
 // AMD and non-AMD compatiblitiy inspired by http://tkareine.org/blog/2012/08/11/why-javascript-needs-module-definitions/ and https://github.com/blueimp/jQuery-File-Upload/blob/9.5.0/js/jquery.fileupload.js
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
@@ -69,7 +38,110 @@ jsPlumb.bind("ready", function() {
             // no more further event handling
             return false;
         });
+         //manipulating id of components
+        var a=[];
+        $("#parent > div").each(function(){ // using > will return the first level of children
+               var identify = $(this).attr('id');
+               switch (identify) { 
+                   case 'pr-1.sq-1.receive-1': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.receive-2': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.receive-3': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.receive-4': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.receive-5': 
+                       a.push(identify);
+                       break;      
+                   case 'pr-1.sq-1.reply-1': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.reply-2': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.reply-3': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.reply-4': 
+                       a.push(identify);
+                       break;  
+                   case 'pr-1.sq-1.fw-1': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.fw-2': 
+                       a.push(identify);
+                       break; 
+                   case 'pr-1.sq-1.fw-3': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.fw-4': 
+                       a.push(identify);
+                       break;             
+                   case 'pr-1.sq-1.assign-1': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.assign-2': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.assign-3': 
+                       a.push(identify);
+                       break;
+                   case 'pr-1.sq-1.assign-4': 
+                       a.push(identify);
+                       break;            
+                   default:
+                       break;
+               }
+               
+        });
+        //jsblomp code goes here
 
+        jsPlumb.bind("ready", function() {          
+          // your jsPlumb related init code goes here
+          var firstInstance = jsPlumb.getInstance();
+            firstInstance.importDefaults({
+              Connector : [ "Straight", { curviness: 150 } ],
+              Anchors : [ "BottomCenter", "TopCenter" ]
+            });
+
+            firstInstance.connect({
+              source:"start", 
+              target:"pr-1.sq-1", 
+              scope:"someScope" 
+            });
+
+            var secondInstance = jsPlumb.getInstance();
+            secondInstance.importDefaults({
+                Connector : [ "Straight", { curviness: 150 } ],
+                Anchors : [ "BottomCenter", "TopCenter" ]
+            });
+            secondInstance.connect({ 
+              source:"pr-1.sq-1", 
+              target:"end", 
+              scope:"someScope"   
+            });
+            
+
+            var interconnection = jsPlumb.getInstance();
+            interconnection.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < a.length; i++) {
+                interconnection.connect({
+                    source: a[i],
+                    target: a[i+1],
+                    scope: "someScope"
+                })
+            };
+            
+        });
         //manipulating id of components
         $("div.content").on("load", function(e) {
             var element = $(e.delegateTarget);

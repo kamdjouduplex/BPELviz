@@ -1,5 +1,9 @@
 /* UI */
 
+.scrollable {
+  max-height: 600px;
+  overflow-y: scroll;
+}
 
 div.start_dot{
   margin-left: auto;
@@ -37,12 +41,6 @@ div.end_dot{
     color: white;
     text-align:center
 }
-
-.sidebar {
-  position: fixed;
-    top:40px ;
-    left: auto;
-}    
 
 
 div.dotted_source {
@@ -154,10 +152,10 @@ div.bpel_activity, div.bpel_basic_activity, div.bpel_assign, div.bpel_empty, div
   margin-left: auto;
   margin-right: auto;
   /* 10px border */
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding-left: 10px;
-  padding-right: 10px;
+  margin-top: 40px;
+  margin-bottom: 40px;
+  padding-left: 20px;
+  padding-right: 20px;
   border: 2px solid #7098b3;
   box-shadow: 5px 5px 17px #aaa;
   border-radius: 12px;
