@@ -46,8 +46,8 @@ div.end_dot{
 div.dotted_source {
   display: none; }
 
-#processContainer {
-  overflow: auto; }
+/* #processContainer {
+  overflow: auto; } */
 
 #tabContainer {
   float: right;
@@ -100,6 +100,9 @@ div.bpel_sources {
   display: none; }
 
 div.bpel_targets {
+  display: none; }
+
+div.bpel_invoke {
   display: none; }
 
 div.bpel_joinCondition {
@@ -178,7 +181,7 @@ div.bpel_activity, div.bpel_basic_activity, div.bpel_assign, div.bpel_empty, div
 
 /* BPEL distinguishes between basic and structured activities */
 div.bpel_basic_activity, div.bpel_assign, div.bpel_empty, div.bpel_compensate, div.bpel_compensateScope, div.bpel_exit, div.bpel_extensionActivity, div.bpel_invoke, div.bpel_receive, div.bpel_reply, div.bpel_rethrow, div.bpel_throw, div.bpel_validate, div.bpel_wait {
-  width: 225px; }
+  min-width: 225px; }
 
 div.bpel_assign:before {
   content: "\00AB assign\00BB"; }

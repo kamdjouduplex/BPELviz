@@ -38,69 +38,69 @@
             // no more further event handling
             return false;
         });
-         //manipulating id of components
-        var a=[];
-        $("#parent > div").each(function(){ // using > will return the first level of children
-               var identify = $(this).attr('id');
-               switch (identify) { 
-                   case 'pr-1.sq-1.receive-1': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.receive-2': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.receive-3': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.receive-4': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.receive-5': 
-                       a.push(identify);
-                       break;      
-                   case 'pr-1.sq-1.reply-1': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.reply-2': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.reply-3': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.reply-4': 
-                       a.push(identify);
-                       break;  
-                   case 'pr-1.sq-1.fw-1': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.fw-2': 
-                       a.push(identify);
-                       break; 
-                   case 'pr-1.sq-1.fw-3': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.fw-4': 
-                       a.push(identify);
-                       break;             
-                   case 'pr-1.sq-1.assign-1': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.assign-2': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.assign-3': 
-                       a.push(identify);
-                       break;
-                   case 'pr-1.sq-1.assign-4': 
-                       a.push(identify);
-                       break;            
-                   default:
-                       break;
-               }
-               
-        });
-        //jsblomp code goes here
+        
+        //manipulating id of components
+        var obj = $( "div#parent" ).find("*");
+        
+        var validArray   = [];
+        var flowArray    = [];
+        var flowSeqArray = [];
+        var prArray      = [];
+        for (var i = 0; i < obj.length; i++) {
+            var Id = obj[i].id;
+            var validId = eliminateInvalideId(Id);
+            if(validId.indexOf("pr") == 0){
+                validArray.push(validId);
+            }
+        };  
+        for (var i = 0; i < validArray.length; i++) {
+            var Id_1 = validArray[i]
+            var validId_1 = getFlowId(Id_1);
+            var validId_2 = getFlowSeqId(Id_1);
+            if(validId_1.indexOf("pr") == 0){
+                flowArray.push(validId_1);
+            }else
+            if(validId_2.indexOf("pr") == 0){
+                flowSeqArray.push(validId_2);
+            }else {
+                prArray.push(validArray[i]);
+            }
+            
+        };
 
+            
+       console.log(flowArray);
+       console.log(flowSeqArray);
+       console.log(prArray);
+
+        function eliminateInvalideId(id){
+            validId = "";
+
+            var myRegex = /partnerLinks|variables|correlationSets|correlations|copy|links|parent|sources|targets|\.fw-([1-9])($|\.sq$)/i;
+            if(myRegex.test(id)){
+            }else{
+                validId = id;
+            }
+            return validId;
+        }
+        function getFlowId(id){
+            var flowId = "";
+            var flowRegex = /\.fw-[1-9]\.(receive|assign|reply|empty)/i;
+            if(flowRegex.test(id)){
+                flowId = id;
+            }
+            return flowId;
+        }
+        function getFlowSeqId(id){
+            var flowSeqId = "";
+            var flowSequenceRegex  = /\.fw-[1-9]\.(sq|sq-[1-9])\.(receive|assign|reply|empty)/i;
+            if(flowSequenceRegex.test(id)){
+                flowSeqId = id;
+            }
+            return flowSeqId;
+        }
+
+        //jsblomp code goes here
         jsPlumb.bind("ready", function() {          
           // your jsPlumb related init code goes here
           var firstInstance = jsPlumb.getInstance();
@@ -133,15 +133,42 @@
                 Anchors : ["BottomCenter", "TopCenter"]
             });
 
-            for (var i = 0; i < a.length; i++) {
+            for (var i = 0; i < prArray.length; i++) {
                 interconnection.connect({
-                    source: a[i],
-                    target: a[i+1],
+                    source: prArray[i],
+                    target: prArray[i+1],
                     scope: "someScope"
                 })
             };
             
+            var flowConnection = jsPlumb.getInstance();
+            flowConnection.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < flowArray.length; i++) {
+                flowConnection.connect({
+                    source: flowArray[i],
+                    target: flowArray[i+1],
+                    scope: "someScope"
+                })
+            };
+            var flowSeqConnection = jsPlumb.getInstance();
+            flowSeqConnection.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < flowSeqArray.length; i++) {
+                flowSeqConnection.connect({
+                    source: flowSeqArray[i],
+                    target: flowSeqArray[i+1],
+                    scope: "someScope"
+                })
+            };
         });
+
         //manipulating id of components
         $("div.content").on("load", function(e) {
             var element = $(e.delegateTarget);

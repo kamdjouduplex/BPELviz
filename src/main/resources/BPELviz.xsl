@@ -12,12 +12,9 @@
 
     <xsl:output method="html" indent="yes" encoding="UTF-8"/>
 
-    <!-- constants -->
-    <xsl:variable name="line-break" select="'&#x0a;'"/>
-
     <!-- create doctype html5 element -->
     <xsl:template match="/">
-        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html></xsl:text>
+        <xsl:text disable-output-escaping='yes'>&lt;!DOCTYPE html&gt;</xsl:text>
         <xsl:apply-templates select="node()"/>
     </xsl:template>
 
@@ -96,18 +93,13 @@
                     </div>
                 </div>
             </div>
-                
 
-                <xsl:variable name="xml-serialization-full">
-                    <xsl:apply-templates mode='serialize' select='.'/></xsl:variable>
-
-                <script>
-                    require(["BPELviz"], function(renderer) {
-                        renderer.initialize();
-                    });
-
-                    SyntaxHighlighter.all();
-                </script>
+            <script>
+                require(["BPELviz"], function(renderer) {
+                    renderer.initialize();
+                });
+                SyntaxHighlighter.all();
+            </script>        
             </body>
         </html>
     </xsl:template>
@@ -132,84 +124,18 @@
         </div>
     </xsl:template>
 
+    <!-- managing the id generation -->
     <xsl:template match="bpel:*">
-        <xsl:variable name="xml-serialization-full">
-            <xsl:apply-templates mode='serialize' select='.'/>
-        </xsl:variable>
-        <xsl:variable name="lines" select="tokenize($xml-serialization-full, $line-break)"/>
-        <xsl:variable name="xml-serialization">
-            <xsl:variable name="line-numbers" as="xs:integer" select="count($lines)"/>
-
-            <xsl:choose>
-                <xsl:when test="$line-numbers > 11">
-                    <xsl:value-of select="string-join(subsequence($lines, 0, 5), $line-break)"/>
-                    <xsl:value-of select="$line-break"/>
-                    ... <xsl:value-of select="$line-numbers - 10"/> lines are hidden ...
-                    <xsl:value-of select="$line-break"/>
-                    <xsl:value-of select="string-join(subsequence($lines, ($line-numbers - 4)), $line-break)"/>
-                </xsl:when>
-                <xsl:otherwise><xsl:value-of select="$xml-serialization-full"/></xsl:otherwise>
-            </xsl:choose>
-        </xsl:variable>
+        <xsl:variable name="actName" select="bpelviz:deriveIdentifier(.)"/>
         <div id="{bpelviz:deriveIdentifier(.)}" class="bpel bpel_{fn:local-name()}">
-            <!-- TODO: show buttons only at activities -->
-            <!-- <button class="btn btn-sm collapseExpandToggleBtn glyphicon glyphicon-minus"></button> -->
-            <div id="parent" class="content"><xsl:apply-templates select="@* | node()"/></div>
-        </div>
-        <div id="source-{bpelviz:deriveIdentifier(.)}" class="dotted_source">
-            <!-- gutter:false -> don't display line numbers. Required, because line counting currently always starts at one -->
-            <pre class="brush: xml; gutter: false;"><xsl:value-of select="$xml-serialization" /></pre>
+            <div id="parent" class="content">
+                <xsl:apply-templates select="@* | node()"/>
+            </div>
         </div>
     </xsl:template>
-
-    <xsl:template match="attribute::name">
-        <!-- random variables generation
-        <xsl:variable name="rand">
-            <xsl:value-of select="math:random()*10" />
-        </xsl:variable>
-        
-        changing icon randomlly
-        <xsl:choose>
-            <xsl:when test="$rand='0'">
-                <xsl:variable name="icon">
-                    <xsl:value-of select="glyphicon glyphicon-off"
-                        disable-output-escaping="yes"/>    
-                </xsl:variable>        
-            </xsl:when>
-            <xsl:when test="$rand='1'">
-                <xsl:variable name="icon">
-                    <xsl:value-of select="glyphicon glyphicon-warning-sign"
-                        disable-output-escaping="yes"/>    
-                </xsl:variable>        
-            </xsl:when>
-            <xsl:when test="$rand='2'">
-                <xsl:variable name="icon">
-                    <xsl:value-of select="glyphicon glyphicon-pause"
-                        disable-output-escaping="yes"/>    
-                </xsl:variable>        
-            </xsl:when>
-            <xsl:when test="$rand='3'">
-                <xsl:variable name="icon">
-                    <xsl:value-of select="glyphicon glyphicon-ok icone"
-                        disable-output-escaping="yes"/>    
-                </xsl:variable>        
-            </xsl:when>
-            <xsl:when test="$rand='2'">
-                <xsl:variable name="icon">
-                    <xsl:value-of select="glyphicon glyphicon-cog"
-                        disable-output-escaping="yes"/>    
-                </xsl:variable>        
-            </xsl:when> 
-            <xsl:otherwise>
-                <xsl:variable name="icon">
-                    <xsl:value-of select="glyphicon glyphicon-ok icone"
-                        disable-output-escaping="yes"/>    
-                </xsl:variable>
-            </xsl:otherwise>       
-        </xsl:choose> -->
-            
-        
-        <xsl:variable name="name" select="./name(..)"/>
+    <!-- end of id generation --> 
+<xsl:template match="attribute::name">
+    <xsl:variable name="name" select="./name(..)"/>
         <xsl:choose>
             <xsl:when test="$name='process'">
                 <div class="bpel_name">
@@ -259,6 +185,9 @@
                             <xsl:when test="$name='if'">
                                 <span class="glyphicon glyphicon-filter"></span>
                             </xsl:when>
+                            <xsl:when test="$name='throw'">
+                                <span class="glyphicon glyphicon-cog"></span>
+                            </xsl:when>
                             <xsl:otherwise>
                                 <span class="glyphicon glyphicon-cog"></span>
                             </xsl:otherwise>
@@ -279,35 +208,5 @@
     <!-- Override default template for copying text -->
     <xsl:template match="text()|@*"/>
 
-    <!-- serialize xml node to string -->
-    <xsl:template match="*" mode="serialize">
-        <xsl:text>&lt;</xsl:text>
-        <xsl:value-of select="name()"/>
-        <xsl:apply-templates select="@*" mode="serialize" />
-        <xsl:choose>
-            <xsl:when test="node()">
-                <xsl:text>&gt;</xsl:text>
-                <xsl:apply-templates mode="serialize" />
-                <xsl:text>&lt;/</xsl:text>
-                <xsl:value-of select="name()"/>
-                <xsl:text>&gt;</xsl:text>
-            </xsl:when>
-            <xsl:otherwise>
-                <xsl:text> /&gt;</xsl:text>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-
-    <xsl:template match="@*" mode="serialize">
-        <xsl:text> </xsl:text>
-        <xsl:value-of select="name()"/>
-        <xsl:text>="</xsl:text>
-        <xsl:value-of select="."/>
-        <xsl:text>"</xsl:text>
-    </xsl:template>
-
-    <xsl:template match="text()" mode="serialize">
-        <xsl:value-of select="."/>
-    </xsl:template>
 
 </xsl:stylesheet>
