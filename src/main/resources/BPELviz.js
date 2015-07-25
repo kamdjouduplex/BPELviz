@@ -46,9 +46,19 @@
         var flowArray    = [];
         var flowSeqArray = [];
         var prArray      = [];
+        var startTarget  = [];
+        var fhArray      = [];
         for (var i = 0; i < obj.length; i++) {
             var Id = obj[i].id;
+            if(Id.indexOf("pr-1.FH-1") == 0){
+                var j=0
+                while(j<1){
+                startTarget.push("pr-1.FH-1");
+                j++;
+                }
+            }
             var validId = eliminateInvalideId(Id);
+            console.log(validId);
             if(validId.indexOf("pr") == 0){
                 validArray.push(validId);
             }
@@ -57,26 +67,34 @@
             var Id_1 = validArray[i]
             var validId_1 = getFlowId(Id_1);
             var validId_2 = getFlowSeqId(Id_1);
+            var validId_3 = getFHId(Id_1);
             if(validId_1.indexOf("pr") == 0){
                 flowArray.push(validId_1);
-            }else
-            if(validId_2.indexOf("pr") == 0){
+            }else if(validId_2.indexOf("pr") == 0){
                 flowSeqArray.push(validId_2);
+            }else if(validId_3.indexOf("pr") == 0){
+                fhArray.push(validId_3);
             }else {
                 prArray.push(validArray[i]);
             }
             
         };
 
-            
-       console.log(flowArray);
-       console.log(flowSeqArray);
-       console.log(prArray);
+        /*remove duplicated element from startTarget array*/
+        startTarget.push("pr-1.sq-1");    
+        startTarget.unshift("start");
+        var uniqueTargetArray = [];
+        $.each(startTarget, function(i, el){
+            if($.inArray(el, uniqueTargetArray) === -1) uniqueTargetArray.push(el);
+        });
+        //console.log(uniqueTargetArray);
+        //console.log(flowSeqArray);
+        //console.log(prArray);
 
         function eliminateInvalideId(id){
             validId = "";
 
-            var myRegex = /partnerLinks|variables|correlationSets|correlations|copy|links|parent|sources|targets|\.fw-([1-9])($|\.sq$)/i;
+            var myRegex = /partnerLinks|invoke|variables|correlationSets|correlations|copy|links|parent|sources|targets|\.fw-([1-9])($|\.sq$|\.sq-[1-9]$)|\.FH-([1-9])(catchAll$|\.catchAll-[1-9]$)/i;
             if(myRegex.test(id)){
             }else{
                 validId = id;
@@ -90,6 +108,14 @@
                 flowId = id;
             }
             return flowId;
+        }
+        function getFHId(id){
+            var fhId = "";
+            var fhRegex = /\.fh-[1-9]\.(catchAll|catchAll-[1-9])\.(receive|assign|reply|empty|compensateScope|compensate)/i;
+            if(fhRegex.test(id)){
+                fhId = id;
+            }
+            return fhId;
         }
         function getFlowSeqId(id){
             var flowSeqId = "";
@@ -108,12 +134,13 @@
               Connector : [ "Straight", { curviness: 150 } ],
               Anchors : [ "BottomCenter", "TopCenter" ]
             });
-
-            firstInstance.connect({
-              source:"start", 
-              target:"pr-1.sq-1", 
-              scope:"someScope" 
-            });
+            for (var i = 0; i < uniqueTargetArray.length; i++) {
+                firstInstance.connect({
+                    source: uniqueTargetArray[i],
+                    target: uniqueTargetArray[i+1],
+                    scope: "someScope"
+                })
+            };
 
             var secondInstance = jsPlumb.getInstance();
             secondInstance.importDefaults({
@@ -167,15 +194,19 @@
                     scope: "someScope"
                 })
             };
-        });
+            var fhConnection = jsPlumb.getInstance();
+            fhConnection.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
 
-        //manipulating id of components
-        $("div.content").on("load", function(e) {
-            var element = $(e.delegateTarget);
-            var bpelElement = element.parent();
-            console.log(element);
-            // no more further event handling
-            return false;
+            for (var i = 0; i < fhArray.length; i++) {
+                fhConnection.connect({
+                    source: fhArray[i],
+                    target: fhArray[i+1],
+                    scope: "someScope"
+                })
+            };
         });
 
         // initialize tabs

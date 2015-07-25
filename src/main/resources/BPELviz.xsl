@@ -5,6 +5,8 @@
                 xmlns:xdt="http://www.w3.org/2005/xpath-datatypes"
                 xmlns:bpel="http://docs.oasis-open.org/wsbpel/2.0/process/executable"
                 xmlns:bpelviz="http://github.com/BPELtools/BPELviz"
+                xmlns:regexp="http://exslt.org/regular-expressions"
+                extension-element-prefixes="regexp"
                 xmlns:math="java.lang.Math"
                 exclude-result-prefixes="math">
 
@@ -52,7 +54,7 @@
             <body>
             <div class="container">
                 <div class="row">
-                    <div class="col-md-3 ">
+                    <!-- <div class="col-md-3 ">
                         <br/>
                      
                         <div class="panel panel-success">
@@ -80,7 +82,7 @@
                     
                     <div class="col-md-8 "><br/>
                     <div class="row scrollable">
-                    <div class="col-md-8 col-md-offset-3">
+                    <div class="col-md-8 col-md-offset-3"> -->
                         <div id="processContainer">
                             <div class="bpel_process bpel">
                                 <div id="start" class="start_dot bpel"><br/>start</div>
@@ -88,9 +90,9 @@
                                 <div id="end" class="end_dot bpel"><br/>end</div>
                             </div>
                         </div>
+                     <!--</div> 
                     </div>
-                    </div>
-                    </div>
+                    </div>-->
                 </div>
             </div>
 
@@ -127,11 +129,31 @@
     <!-- managing the id generation -->
     <xsl:template match="bpel:*">
         <xsl:variable name="actName" select="bpelviz:deriveIdentifier(.)"/>
-        <div id="{bpelviz:deriveIdentifier(.)}" class="bpel bpel_{fn:local-name()}">
-            <div id="parent" class="content">
-                <xsl:apply-templates select="@* | node()"/>
-            </div>
-        </div>
+        <xsl:variable name="flow">
+            <xsl:analyze-string select="$actName" 
+                regex="^(pr-[1-9]).sq-[1-9].fw-[1-9].(receive|assign|reply|empty|sq)($|-[1-9]$)">
+              <xsl:matching-substring>
+                <xsl:value-of select="$actName"/>
+              </xsl:matching-substring>
+            </xsl:analyze-string> 
+        </xsl:variable>
+
+        <xsl:choose>
+            <xsl:when test="$actName = $flow">
+                <div id="{bpelviz:deriveIdentifier(.)}" class="bpel col-md-3 bpel_{fn:local-name()}">
+                    <div id="parent" class="content">
+                        <xsl:apply-templates select="@* | node()"/>
+                    </div>
+                </div>
+            </xsl:when>
+            <xsl:otherwise>
+                <div id="{bpelviz:deriveIdentifier(.)}" class="bpel bpel_{fn:local-name()}">
+                    <div id="parent" class="content">
+                        <xsl:apply-templates select="@* | node()"/>
+                    </div>
+                </div>
+            </xsl:otherwise>
+        </xsl:choose>
     </xsl:template>
     <!-- end of id generation --> 
 <xsl:template match="attribute::name">
@@ -175,6 +197,9 @@
                             </xsl:when>
                             <xsl:when test="$name='receive'">
                                 <span class="glyphicon glyphicon-cloud-download"></span>
+                            </xsl:when>
+                            <xsl:when test="$name='compensate'">
+                                <span class="glyphicon glyphicon-cog"></span>
                             </xsl:when>
                             <xsl:when test="$name='invoke'">
                                 <span class="glyphicon glyphicon-transfer"></span>

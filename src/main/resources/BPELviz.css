@@ -39,15 +39,15 @@ div.end_dot{
     padding: 3px;
     border-radius: 100%;
     color: white;
-    text-align:center
+    text-align:center;
 }
+div.flow {
+  overflow-x: scroll; }
 
-
-div.dotted_source {
+/* div.dotted_source {
   display: none; }
 
-/* #processContainer {
-  overflow: auto; } */
+
 
 #tabContainer {
   float: right;
@@ -64,7 +64,7 @@ div.dotted_source {
   float: right;
   margin: 1px;
   margin-right: -5px;
-  margin-top: 5px; }
+  margin-top: 5px; } */
 
 div.bpel_correlationSets {
   display: none; }
@@ -152,9 +152,9 @@ div.bpel_activity.selected, div.selected.bpel_basic_activity, div.selected.bpel_
 /* each basic and structured activity has this */
 div.bpel_activity, div.bpel_basic_activity, div.bpel_assign, div.bpel_empty, div.bpel_compensate, div.bpel_compensateScope, div.bpel_exit, div.bpel_extensionActivity, div.bpel_invoke, div.bpel_receive, div.bpel_reply, div.bpel_rethrow, div.bpel_throw, div.bpel_validate, div.bpel_wait, div.bpel_structured_activity, div.bpel_eventHandlers, div.bpel_if, div.bpel_faultHandlers, div.bpel_forEach, div.bpel_catch, div.bpel_catchAll, div.bpel_flow, div.bpel_pick, div.bpel_onAlarm, div.bpel_onEvent, div.bpel_onMessage, div.bpel_process, div.bpel_repeatUntil, div.bpel_scope, div.bpel_sequence, div.bpel_while, div.bpel_if_child, div.bpel_if_then, div.bpel_if_elseif, div.bpel_if_else {
   /* center it within parent */
-  margin-left: auto;
+  /* margin-left: auto;
   margin-right: auto;
-  /* 10px border */
+  10px border */
   margin-top: 40px;
   margin-bottom: 40px;
   padding-left: 20px;
@@ -181,7 +181,7 @@ div.bpel_activity, div.bpel_basic_activity, div.bpel_assign, div.bpel_empty, div
 
 /* BPEL distinguishes between basic and structured activities */
 div.bpel_basic_activity, div.bpel_assign, div.bpel_empty, div.bpel_compensate, div.bpel_compensateScope, div.bpel_exit, div.bpel_extensionActivity, div.bpel_invoke, div.bpel_receive, div.bpel_reply, div.bpel_rethrow, div.bpel_throw, div.bpel_validate, div.bpel_wait {
-  min-width: 225px; }
+ width: 225px;}
 
 div.bpel_assign:before {
   content: "\00AB assign\00BB"; }
