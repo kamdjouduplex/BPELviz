@@ -44,8 +44,15 @@
         
         var validArray   = [];
         var flowArray    = [];
-        var flowSeqArray = [];
-        var prArray      = [];
+        var flowSeqArray1 = [];
+        var flowSeqArray2 = [];
+        var flowSeqArray3 = [];
+        var scopeSqArray  = [];
+        var scopeSqArray1  = [];
+        var scopeSqArray2  = [];
+        var CatchAllArray1 = [];
+        var CatchAllArray2 = [];
+       var prArray      = [];
         var startTarget  = [];
         var fhArray      = [];
         for (var i = 0; i < obj.length; i++) {
@@ -65,15 +72,36 @@
         };  
         for (var i = 0; i < validArray.length; i++) {
             var Id_1 = validArray[i]
-            var validId_1 = getFlowId(Id_1);
-            var validId_2 = getFlowSeqId(Id_1);
-            var validId_3 = getFHId(Id_1);
-            if(validId_1.indexOf("pr") == 0){
-                flowArray.push(validId_1);
+            var validId_0 = getFlowId(Id_1);
+            var validId_1 = getFlowSeqId1(Id_1);
+            var validId_2 = getFlowSeqId2(Id_1);
+            var validId_3 = getFlowSeqId3(Id_1);
+            var validId_4 = getFHId(Id_1);
+            var validId_5 = getSqScope1(Id_1);
+            var validId_6 = getSqScope3(Id_1);
+            var validId_7 = getSqScope3(Id_1);
+            var validId_8 = getCatchAllAct1(Id_1);
+            var validId_9 = getCatchAllAct2(Id_1);
+            if(validId_0.indexOf("pr") == 0){
+                flowArray.push(validId_0);
+            }else if(validId_1.indexOf("pr") == 0){
+                flowSeqArray1.push(validId_1);
             }else if(validId_2.indexOf("pr") == 0){
-                flowSeqArray.push(validId_2);
+                flowSeqArray2.push(validId_2);
             }else if(validId_3.indexOf("pr") == 0){
-                fhArray.push(validId_3);
+                flowSeqArray3.push(validId_3);
+            }else if(validId_4.indexOf("pr") == 0){
+                fhArray.push(validId_4);
+            }else if(validId_5.indexOf("pr") == 0){
+                scopeSqArray.push(validId_5);
+            }else if(validId_6.indexOf("pr") == 0){
+                scopeSqArray1.push(validId_6);
+            }else if(validId_7.indexOf("pr") == 0){
+                scopeSqArray2.push(validId_7);
+            }else if(validId_8.indexOf("pr") == 0){
+                CatchAllArray1.push(validId_8);
+            }else if(validId_9.indexOf("pr") == 0){
+                CatchAllArray2.push(validId_9);
             }else {
                 prArray.push(validArray[i]);
             }
@@ -88,13 +116,14 @@
             if($.inArray(el, uniqueTargetArray) === -1) uniqueTargetArray.push(el);
         });
         //console.log(uniqueTargetArray);
-        //console.log(flowSeqArray);
-        //console.log(prArray);
+        //console.log(flowSeqArray1);
+        //console.log(scopeSqArray);
+        console.log(prArray);
 
         function eliminateInvalideId(id){
             validId = "";
 
-            var myRegex = /partnerLinks|invoke|variables|correlationSets|correlations|copy|links|parent|sources|targets|\.fw-([1-9])($|\.sq$|\.sq-[1-9]$)|\.FH-([1-9])(catchAll$|\.catchAll-[1-9]$)/i;
+            var myRegex = /partnerLinks|invoke|variables|correlationSets|.wait-1.for|wait-1.until|correlations|copy|messageExchange|toPart|fromParts|links|parent|startCounterValue|finalCounterValue|messageExchange|sources|targets|\.fe-[1-9](\.sc$|\.sc-[1-9]$)|\.fw-([1-9])(\.sq$|\.sq-[1-9]$)|\.FH-([1-9])(catchAll$|\.catchAll-[1-9]$)/i;
             if(myRegex.test(id)){
             }else{
                 validId = id;
@@ -103,7 +132,7 @@
         }
         function getFlowId(id){
             var flowId = "";
-            var flowRegex = /\.fw-[1-9]\.(receive|assign|reply|empty)/i;
+            var flowRegex = /\.(fw|fw-[1-9])\.(receive|assign|reply|empty|rethrow)/i;
             if(flowRegex.test(id)){
                 flowId = id;
             }
@@ -111,24 +140,101 @@
         }
         function getFHId(id){
             var fhId = "";
-            var fhRegex = /\.fh-[1-9]\.(catchAll|catchAll-[1-9])\.(receive|assign|reply|empty|compensateScope|compensate)/i;
+            var fhRegex = /\.fh-[1-9]\.(catchAll|catchAll-[1-9])\.(receive|assign|reply|empty|compensateScope|compensate|rethrow)/i;
             if(fhRegex.test(id)){
                 fhId = id;
             }
             return fhId;
         }
-        function getFlowSeqId(id){
-            var flowSeqId = "";
-            var flowSequenceRegex  = /\.fw-[1-9]\.(sq|sq-[1-9])\.(receive|assign|reply|empty)/i;
-            if(flowSequenceRegex.test(id)){
-                flowSeqId = id;
+        
+        function getFlowSeqId1(id){
+            var flowSeqId1 = "";
+            var flowSequenceRegex1 = /\.fw-[1-9]\.(sq)\.(receive|assign|reply|empty|rethrow)/i;
+            if(flowSequenceRegex1.test(id)){
+                flowSeqId1 = id;
             }
-            return flowSeqId;
+            return flowSeqId1;
         }
+        function getFlowSeqId2(id){
+            var flowSeqId2 = "";
+            var flowSequenceRegex2 = /\.fw-[1-9]\.(sq-1)\.(receive|assign|reply|empty|rethrow)/i;
+            if(flowSequenceRegex2.test(id)){
+                flowSeqId2 = id;
+            }
+            return flowSeqId2;
+        }
+        function getFlowSeqId3(id){
+            var flowSeqId3 = "";
+            var flowSequenceRegex3 = /\.fw-[1-9]\.(sq-2)\.(receive|assign|reply|empty|rethrow)/i;
+            if(flowSequenceRegex3.test(id)){
+                flowSeqId3 = id;
+            }
+            return flowSeqId3;
+        }
+        function getSqScope1(id){
+            var sqScope1 = "";
+            var sqScopeRegex1 = /\.sc-[1-9]\.(sq$|sq-[1-9]$)/i;
+            if(sqScopeRegex1.test(id)){
+                sqScope1 = id;
+            }
+            return sqScope1;
+        }
+        function getSqScope2(id){
+            var sqScope2 = "";
+            var sqScopeRegex2 = /\.sc-[1-9]\.(sq)\.(receive|assign|reply|empty|rethrow)/i;
+            if(sqScopeRegex2.test(id)){
+                sqScope2 = id;
+            }
+            return sqScope2;
+        }
+        function getSqScope3(id){
+            var sqScope3 = "";
+            var sqScopeRegex3 = /\.sc-[1-9]\.(sq-1)\.(receive|assign|reply|empty|rethrow)/i;
+            if(sqScopeRegex3.test(id)){
+                sqScope3 = id;
+            }
+            return sqScope3;
+        }
+
+        function getCatchAllAct1(id){
+            var catAll = "";
+            var catAllRegex = /\.catchAll\.(receive|assign|reply|empty|rethrow)/i;
+            if(catAllRegex.test(id)){
+                catAll = id;
+            }
+            return catAll;
+        }
+        function getCatchAllAct2(id){
+            var catAll = "";
+            var catAllRegex = /\.catchAll-[1-9]\.(receive|assign|reply|empty|rethrow)/i;
+            if(catAllRegex.test(id)){
+                catAll = id;
+            }
+            return catAll;
+        }
+        /*function hasMoreThanOneSq(id){
+            var flowSequenceRegex  = /\.fw-[1-9]\.(sq-[1-9])\.(receive|assign|reply|empty)/i;
+            if(flowSequenceRegex.test(id)){
+                var arr = id.split("."); 
+                for(var i=0;i<arr.length;i++){ 
+                    if(i>1){ 
+                        if(arr[i].indexOf("fw") > -1){
+                            if(arr[i+1].indexOf("sq") > -1){
+                                var n = arr[i+1].split("-")[1];
+                            }
+                        }
+                    }
+                }
+            }
+            if (n>1) {
+                return true;
+            };
+        }*/
 
         //jsblomp code goes here
         jsPlumb.bind("ready", function() {          
           // your jsPlumb related init code goes here
+          /* jsplomb code for the start link*/
           var firstInstance = jsPlumb.getInstance();
             firstInstance.importDefaults({
               Connector : [ "Straight", { curviness: 150 } ],
@@ -142,6 +248,7 @@
                 })
             };
 
+            /* jsplomb code for the end link*/
             var secondInstance = jsPlumb.getInstance();
             secondInstance.importDefaults({
                 Connector : [ "Straight", { curviness: 150 } ],
@@ -153,7 +260,7 @@
               scope:"someScope"   
             });
             
-
+            /* jsplomb code for all the internal process link*/
             var interconnection = jsPlumb.getInstance();
             interconnection.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -168,7 +275,7 @@
                 })
             };
             
-            var flowConnection = jsPlumb.getInstance();
+            /*var flowConnection = jsPlumb.getInstance();
             flowConnection.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
                 Anchors : ["BottomCenter", "TopCenter"]
@@ -180,20 +287,54 @@
                     target: flowArray[i+1],
                     scope: "someScope"
                 })
-            };
-            var flowSeqConnection = jsPlumb.getInstance();
-            flowSeqConnection.importDefaults({
+            };*/
+
+            /* jsplomb code for the first flow sequence link*/
+            var flowSeqConnection1 = jsPlumb.getInstance();
+            flowSeqConnection1.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
                 Anchors : ["BottomCenter", "TopCenter"]
             });
 
-            for (var i = 0; i < flowSeqArray.length; i++) {
-                flowSeqConnection.connect({
-                    source: flowSeqArray[i],
-                    target: flowSeqArray[i+1],
+            for (var i = 0; i < flowSeqArray1.length; i++) {
+                flowSeqConnection1.connect({
+                    source: flowSeqArray1[i],
+                    target: flowSeqArray1[i+1],
                     scope: "someScope"
                 })
             };
+
+            /* jsplomb code for the second flow sequence link*/
+            var flowSeqConnection2 = jsPlumb.getInstance();
+            flowSeqConnection2.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < flowSeqArray2.length; i++) {
+                flowSeqConnection2.connect({
+                    source: flowSeqArray2[i],
+                    target: flowSeqArray2[i+1],
+                    scope: "someScope"
+                })
+            };
+
+            /* jsplomb code for the tirdth flow sequence link*/
+            var flowSeqConnection3 = jsPlumb.getInstance();
+            flowSeqConnection3.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < flowSeqArray3.length; i++) {
+                flowSeqConnection3.connect({
+                    source: flowSeqArray3[i],
+                    target: flowSeqArray3[i+1],
+                    scope: "someScope"
+                })
+            };
+
+            /* jsplomb code for the fault handler link*/
             var fhConnection = jsPlumb.getInstance();
             fhConnection.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -207,13 +348,82 @@
                     scope: "someScope"
                 })
             };
-        });
 
-        // initialize tabs
-        $('#SourceTabs a').click(function (e) {
-            e.preventDefault();
-            $(this).tab('show');
-        })
+            /* jsplomb code for the sequence of scope link*/
+            var scopeSqConnection = jsPlumb.getInstance();
+            scopeSqConnection.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < scopeSqArray.length; i++) {
+                scopeSqConnection.connect({
+                    source: scopeSqArray[i],
+                    target: scopeSqArray[i+1],
+                    scope: "someScope"
+                })
+            };
+
+            /* jsplomb code for the sequence1 of scope link*/
+            var scopeSqConnection1 = jsPlumb.getInstance();
+            scopeSqConnection1.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < scopeSqArray1.length; i++) {
+                scopeSqConnection1.connect({
+                    source: scopeSqArray1[i],
+                    target: scopeSqArray1[i+1],
+                    scope: "someScope"
+                })
+            };
+CatchAllArray1
+            /* jsplomb code for the sequence2 of scope link*/
+            var scopeSqConnection2 = jsPlumb.getInstance();
+            scopeSqConnection2.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < scopeSqArray2.length; i++) {
+                scopeSqConnection2.connect({
+                    source: scopeSqArray2[i],
+                    target: scopeSqArray2[i+1],
+                    scope: "someScope"
+                })
+            };
+
+            /* jsplomb code for the sequence2 of scope link*/
+            var catchAllConnection1 = jsPlumb.getInstance();
+            catchAllConnection1.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < CatchAllArray1.length; i++) {
+                catchAllConnection1.connect({
+                    source: CatchAllArray1[i],
+                    target: CatchAllArray1[i+1],
+                    scope: "someScope"
+                })
+            };
+            /* jsplomb code for the sequence2 of scope link*/
+            var catchAllConnection2 = jsPlumb.getInstance();
+            catchAllConnection2.importDefaults({
+                Connector : ["Straight", { curviness: 65 }],
+                Anchors : ["BottomCenter", "TopCenter"]
+            });
+
+            for (var i = 0; i < CatchAllArray2.length; i++) {
+                catchAllConnection2.connect({
+                    source: CatchAllArray2[i],
+                    target: CatchAllArray2[i+1],
+                    scope: "someScope"
+                })
+            };
+
+        });
 
         // enable mouseover on elements
         $(".bpel").on("click", function(event) {
@@ -242,23 +452,6 @@
 
             document.getElementById("time").innerHTML = datetime;
 
-            /* show source in "Source Extract" tab */
-            var sourceId = "source-" + id;
-            sourceId = sourceId.replace(/\./g,'\\.');
-            var source = $("#" + sourceId).children().clone();
-            $("#SourceExtractTab").empty().append(source);
-
-            // mark the clicked item with another color
-            $(".selected").removeClass("selected");
-            target.addClass("selected");
-
-            /* highlight source in "Full Source" tab. Doesn't work currently as we don't have the line numbers available */
-            // highlight line number
-            // $("#FullSource > div > div > table > tbody > tr > td.gutter > div.line.number2").addClass("highlighted")
-            // highlight code fragment
-            // $("#FullSource > div > div > table > tbody > tr > td.code > div > div.line.number2").addClass("highlighted")
-
-            // don't show source for the parent element, just for the clicked one
             return false;
         });
     }
@@ -268,3 +461,4 @@
     }
     return module;
 }));
+

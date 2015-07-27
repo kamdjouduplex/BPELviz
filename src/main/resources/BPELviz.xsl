@@ -140,7 +140,7 @@
 
         <xsl:choose>
             <xsl:when test="$actName = $flow">
-                <div id="{bpelviz:deriveIdentifier(.)}" class="bpel col-md-3 bpel_{fn:local-name()}">
+                <div id="{bpelviz:deriveIdentifier(.)}" class="bpel col-md-6 bpel_{fn:local-name()}">
                     <div id="parent" class="content">
                         <xsl:apply-templates select="@* | node()"/>
                     </div>

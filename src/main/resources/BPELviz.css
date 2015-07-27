@@ -41,15 +41,11 @@ div.end_dot{
     color: white;
     text-align:center;
 }
-div.flow {
-  overflow-x: scroll; }
-
-/* div.dotted_source {
-  display: none; }
+.bpel_flow{ overflow-x: scroll; }
 
 
 
-#tabContainer {
+/* #tabContainer {
   float: right;
   width: 500px;
   top: 0px;
