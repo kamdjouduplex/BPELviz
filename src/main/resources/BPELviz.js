@@ -212,24 +212,7 @@
             }
             return catAll;
         }
-        /*function hasMoreThanOneSq(id){
-            var flowSequenceRegex  = /\.fw-[1-9]\.(sq-[1-9])\.(receive|assign|reply|empty)/i;
-            if(flowSequenceRegex.test(id)){
-                var arr = id.split("."); 
-                for(var i=0;i<arr.length;i++){ 
-                    if(i>1){ 
-                        if(arr[i].indexOf("fw") > -1){
-                            if(arr[i+1].indexOf("sq") > -1){
-                                var n = arr[i+1].split("-")[1];
-                            }
-                        }
-                    }
-                }
-            }
-            if (n>1) {
-                return true;
-            };
-        }*/
+        
 
         //jsblomp code goes here
         jsPlumb.bind("ready", function() {          
@@ -462,3 +445,21 @@ CatchAllArray1
     return module;
 }));
 
+/*function hasMoreThanOneSq(id){
+            var flowSequenceRegex  = /\.fw-[1-9]\.(sq-[1-9])\.(receive|assign|reply|empty)/i;
+            if(flowSequenceRegex.test(id)){
+                var arr = id.split("."); 
+                for(var i=0;i<arr.length;i++){ 
+                    if(i>1){ 
+                        if(arr[i].indexOf("fw") > -1){
+                            if(arr[i+1].indexOf("sq") > -1){
+                                var n = arr[i+1].split("-")[1];
+                            }
+                        }
+                    }
+                }
+            }
+            if (n>1) {
+                return true;
+            };
+        }*/
