@@ -25,8 +25,6 @@
             <head>
                 <title>Visual</title>
                 <meta charset="utf-8"/>
-
-                <!-- latest release is 3.0.83. That does not play well with requirejs. Therefore, everything of SyntaxHighlighter is loaded before requirejs -->
                 <script src="http://alexgorbatchev.com/pub/sh/3.0.83/scripts/shCore.js" type="text/javascript"></script>
                 <script src="http://alexgorbatchev.com/pub/sh/3.0.83/scripts/shBrushXml.js" type="text/javascript"></script>
                 <script src="dom.jsPlumb-1.7.5-min.js"></script>
@@ -41,71 +39,37 @@
                         "bootstrap3": ["jquery"]
                     }});
                 </script>
-
-                <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-
-                <link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+    			<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    			<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
                 <link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
                 <link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeEclipse.css" rel="stylesheet" type="text/css" />
-
                 <link href="BPELviz.css" rel="stylesheet" type="text/css"/>
-
-            </head>
-            <body>
-            <div class="container">
-                <div class="row">
-                    <!-- <div class="col-md-3 ">
-                        <br/>
-                     
-                        <div class="panel panel-success">
-                          <div class="panel-heading">
-                            <h3 class="panel-title">How it works</h3>
-                          </div>
-                          <div class="panel-body">
-                            just click on any acitivity and get more details about it in the panel below.
-                            Thanks!
-                          </div>
-                        </div>
-                        <br/>
-                        <div class="panel panel-info">
-                          <div class="panel-heading">
-                            <h3 id="title" class="panel-title"></h3>
-                          </div>
-                          <div class="panel-body">
-                            <strong >Time: </strong><p id="time"></p>
-                            <strong >Status: </strong><p>Completed</p>
-                            <strong >More: </strong><p >Some text</p>
-                            
-                          </div>
-                        </div>
-                    </div>
-                    
-                    <div class="col-md-8 "><br/>
-                    <div class="row scrollable">
-                    <div class="col-md-8 col-md-offset-3"> -->
-                        <div id="processContainer">
-                            <div class="bpel_process bpel">
-                                <div id="start" class="start_dot bpel"><br/>start</div>
-                                <xsl:apply-templates select="@* | node()"/>
-                                <div id="end" class="end_dot bpel"><br/>end</div>
-                            </div>
-                        </div>
-                     <!--</div> 
-                    </div>
-                    </div>-->
-                </div>
-            </div>
-
-            <script>
-                require(["BPELviz"], function(renderer) {
-                    renderer.initialize();
-                });
-                SyntaxHighlighter.all();
-            </script>        
-            </body>
+    		</head>
+    		<body>
+                <script type="text/javascript">
+                    var lines =[];
+                    var links = [];
+                </script>
+    			<div class="container">
+    				<div class="row">
+    					<div id="processContainer">
+    						<div class="bpel_process bpel">
+    							<div id="start" class="start_dot bpel"><br/>start</div>
+    							<xsl:apply-templates select="@* | node()"/>
+    							<div id="end" class="end_dot bpel"><br/>end</div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    			<script>
+    				require(["BPELviz"], function(renderer) {
+    					renderer.initialize();
+    				});
+    				SyntaxHighlighter.all();
+    			</script>        
+    		</body>
         </html>
     </xsl:template>
-
     <xsl:template match="bpel:condition">
         <div class="bpel_condition">
             <xsl:value-of select="."/>
@@ -115,12 +79,10 @@
     <xsl:template match="bpel:if">
         <div class="bpel_if">
             <xsl:apply-templates select="@*"/>
-
-            <div class="bpel">
-                <xsl:apply-templates select="bpel:condition"/>
-                <xsl:apply-templates select="child[not(bpel:condition or bpel:else or bpel:elseif)]"/>
-            </div>
-
+				<div class="bpel">
+	                <xsl:apply-templates select="bpel:condition"/>
+	                <xsl:apply-templates select="child[not(bpel:condition or bpel:else or bpel:elseif)]"/>
+	            </div>
             <xsl:apply-templates select="bpel:elseif"/>
             <xsl:apply-templates select="bpel:else"/>
         </div>
@@ -128,23 +90,28 @@
 
     <!-- managing the id generation -->
     <xsl:template match="bpel:*">
-        <xsl:variable name="actName" select="bpelviz:deriveIdentifier(.)"/>
+        <xsl:variable name="__name2" select="@name"/>
+        <xsl:variable name="__id2" select="bpelviz:deriveIdentifier(.)"/>
+        <script type="text/javascript">
+            links.push('<xsl:value-of select="$__id2"/>');
+            links.push('<xsl:value-of select="$__name2"/>');
+        </script>
+        <xsl:variable name="actId" select="bpelviz:deriveIdentifier(.)"/>
         <xsl:variable name="flow">
-            <xsl:analyze-string select="$actName" 
-                regex="^(pr-[1-9]).sq-[1-9].fw-[1-9].(receive|assign|reply|empty|sq)($|-[1-9]$)">
-              <xsl:matching-substring>
-                <xsl:value-of select="$actName"/>
+            <xsl:analyze-string select="$actId" 
+                regex="^(pr-[1-9])\.sq-[1-9]\.fw-[1-9]\.(receive|assign|reply|empty|sq)($|-[1-9]$)">
+               <xsl:matching-substring>
+                <xsl:value-of select="$actId"/>
               </xsl:matching-substring>
             </xsl:analyze-string> 
-        </xsl:variable>
-
-        <xsl:choose>
-            <xsl:when test="$actName = $flow">
-                <div id="{bpelviz:deriveIdentifier(.)}" class="bpel col-md-6 bpel_{fn:local-name()}">
-                    <div id="parent" class="content">
-                        <xsl:apply-templates select="@* | node()"/>
+        </xsl:variable>   
+         <xsl:choose>
+            <xsl:when test="$actId = $flow">
+                    <div id="{bpelviz:deriveIdentifier(.)}" class="bpel expand bpel_{fn:local-name()}">
+                        <div id="parent" class="content">
+                            <xsl:apply-templates select="@* | node()"/>
+                        </div>
                     </div>
-                </div>
             </xsl:when>
             <xsl:otherwise>
                 <div id="{bpelviz:deriveIdentifier(.)}" class="bpel bpel_{fn:local-name()}">
@@ -155,6 +122,8 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
+
+    
     <!-- end of id generation --> 
 <xsl:template match="attribute::name">
     <xsl:variable name="name" select="./name(..)"/>
@@ -207,6 +176,9 @@
                             <xsl:when test="$name='exit'">
                                 <span class="glyphicon glyphicon-stop"></span>
                             </xsl:when>
+                            <xsl:when test="$name='empty'">
+                                <span class="glyphicon glyphicon glyphicon-minus"></span>
+                            </xsl:when>
                             <xsl:when test="$name='if'">
                                 <span class="glyphicon glyphicon-filter"></span>
                             </xsl:when>
@@ -229,7 +201,20 @@
             </xsl:otherwise>
         </xsl:choose>
     </xsl:template>
-
+    
+    <xsl:template match="//bpel:links/bpel:link">
+        <xsl:variable name="__link" select="@name"/>
+        <xsl:for-each select="//node()[bpel:sources/bpel:source[@linkName=$__link]]">
+            <xsl:variable name="__source" select="@name"/>
+            <xsl:for-each select="//node()[bpel:targets/bpel:target[@linkName=$__link]]">
+                <xsl:variable name="__target" select="@name"/>
+                <script type="text/javascript">
+                    lines.push('<xsl:value-of select="$__source"/>');
+                    lines.push('<xsl:value-of select="$__target"/>');
+                </script>
+            </xsl:for-each>
+        </xsl:for-each>
+    </xsl:template>
     <!-- Override default template for copying text -->
     <xsl:template match="text()|@*"/>
 

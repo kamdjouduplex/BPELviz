@@ -21,6 +21,7 @@ public class BPELViz {
 
     public static final String BPELVIZ_CSS = "BPELviz.css";
     public static final String BPELVIZ_JS = "BPELviz.js";
+    public static final String BPELVIZ_JSPUMB = "dom.jsPlumb-1.7.5-min.js";
 
     public void bpel2html(Path bpelFile, Path htmlFile) throws BPELVizException {
         try {
@@ -32,8 +33,9 @@ public class BPELViz {
         try {
             Files.copy(BPELViz.class.getResourceAsStream("/" + BPELVIZ_CSS), htmlFile.getParent().resolve(BPELVIZ_CSS), StandardCopyOption.REPLACE_EXISTING);
             Files.copy(BPELViz.class.getResourceAsStream("/" + BPELVIZ_JS), htmlFile.getParent().resolve(BPELVIZ_JS), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(BPELViz.class.getResourceAsStream("/" + BPELVIZ_JSPUMB), htmlFile.getParent().resolve(BPELVIZ_JSPUMB), StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
-            throw new BPELVizException("Could not copy css/js file", e);
+            throw new BPELVizException("Could not copy css/js/jsplumb file", e);
         }
     }
 

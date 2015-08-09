@@ -40,8 +40,21 @@
         });
         
         //manipulating id of components
-        var obj = $( "div#parent" ).find("*");
         
+        var obj = $( "div#parent" ).find("*");
+        var linkObj = [];
+        console.log(links);
+        console.log(lines);
+        for (var i = 0; i < lines.length; i++) {
+            for (var j = 0; j < links.length; j++) {
+                if (lines[i] === links[j]) {
+                    linkObj.push(links[j-1]);
+                    break;
+                };
+            };
+        };
+        console.log(linkObj);
+
         var validArray   = [];
         var flowArray    = [];
         var flowSeqArray1 = [];
@@ -65,7 +78,7 @@
                 }
             }
             var validId = eliminateInvalideId(Id);
-            console.log(validId);
+            //console.log(validId);
             if(validId.indexOf("pr") == 0){
                 validArray.push(validId);
             }
@@ -118,7 +131,7 @@
         //console.log(uniqueTargetArray);
         //console.log(flowSeqArray1);
         //console.log(scopeSqArray);
-        console.log(prArray);
+        //console.log(prArray);
 
         function eliminateInvalideId(id){
             validId = "";
@@ -215,19 +228,21 @@
         
 
         //jsblomp code goes here
-        jsPlumb.bind("ready", function() {          
+        jsPlumb.bind("ready", function() {        
           // your jsPlumb related init code goes here
           /* jsplomb code for the start link*/
           var firstInstance = jsPlumb.getInstance();
             firstInstance.importDefaults({
               Connector : [ "Straight", { curviness: 150 } ],
-              Anchors : [ "BottomCenter", "TopCenter" ]
+              Anchors : [ "BottomCenter", "TopCenter" ],
             });
             for (var i = 0; i < uniqueTargetArray.length; i++) {
                 firstInstance.connect({
                     source: uniqueTargetArray[i],
                     target: uniqueTargetArray[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -240,7 +255,9 @@
             secondInstance.connect({ 
               source:"pr-1.sq-1", 
               target:"end", 
-              scope:"someScope"   
+              overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]   
             });
             
             /* jsplomb code for all the internal process link*/
@@ -254,23 +271,29 @@
                 interconnection.connect({
                     source: prArray[i],
                     target: prArray[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
             
-            /*var flowConnection = jsPlumb.getInstance();
-            flowConnection.importDefaults({
+            /* jsplomb code for all the internal process link*/
+            var linksConnections = jsPlumb.getInstance();
+            linksConnections.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
                 Anchors : ["BottomCenter", "TopCenter"]
             });
 
-            for (var i = 0; i < flowArray.length; i++) {
-                flowConnection.connect({
-                    source: flowArray[i],
-                    target: flowArray[i+1],
-                    scope: "someScope"
+            for (var i = 0; i < linkObj.length; i=i+2) {
+                linksConnections.connect({
+                    source: linkObj[i],
+                    target: linkObj[i+1],
+                    paintStyle:{ strokeStyle:"blue", lineWidth:4 },
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
-            };*/
+            };
 
             /* jsplomb code for the first flow sequence link*/
             var flowSeqConnection1 = jsPlumb.getInstance();
@@ -283,7 +306,9 @@
                 flowSeqConnection1.connect({
                     source: flowSeqArray1[i],
                     target: flowSeqArray1[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -298,7 +323,9 @@
                 flowSeqConnection2.connect({
                     source: flowSeqArray2[i],
                     target: flowSeqArray2[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -313,7 +340,9 @@
                 flowSeqConnection3.connect({
                     source: flowSeqArray3[i],
                     target: flowSeqArray3[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -328,7 +357,9 @@
                 fhConnection.connect({
                     source: fhArray[i],
                     target: fhArray[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -343,7 +374,9 @@
                 scopeSqConnection.connect({
                     source: scopeSqArray[i],
                     target: scopeSqArray[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -358,10 +391,12 @@
                 scopeSqConnection1.connect({
                     source: scopeSqArray1[i],
                     target: scopeSqArray1[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
-CatchAllArray1
+
             /* jsplomb code for the sequence2 of scope link*/
             var scopeSqConnection2 = jsPlumb.getInstance();
             scopeSqConnection2.importDefaults({
@@ -373,7 +408,9 @@ CatchAllArray1
                 scopeSqConnection2.connect({
                     source: scopeSqArray2[i],
                     target: scopeSqArray2[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -388,7 +425,9 @@ CatchAllArray1
                 catchAllConnection1.connect({
                     source: CatchAllArray1[i],
                     target: CatchAllArray1[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
             /* jsplomb code for the sequence2 of scope link*/
@@ -402,7 +441,9 @@ CatchAllArray1
                 catchAllConnection2.connect({
                     source: CatchAllArray2[i],
                     target: CatchAllArray2[i+1],
-                    scope: "someScope"
+                    overlays:[ 
+                                ["Arrow" , { width:25, length:25, location:1 }]
+                            ]
                 })
             };
 
@@ -419,7 +460,7 @@ CatchAllArray1
             if(elName.indexOf('_') == -1){
               activityName = "process";
             }
-            document.getElementById("title").innerHTML = activityName;
+            //document.getElementById("title").innerHTML = activityName;
 
             // For todays date;
             Date.prototype.today = function () { 

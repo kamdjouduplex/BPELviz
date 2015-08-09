@@ -71,7 +71,7 @@
             </receive>
 
             <!-- Merge the requests -->
-            <empty name="settleTrade" >
+            <empty name="settleTrade" partnerLink="MyRoleLink" >
                 <targets>
                     <joinCondition>$buyToSettle and $sellToSettle</joinCondition>
                         <target linkName="buyToSettle" />

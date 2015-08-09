@@ -11,7 +11,7 @@ div.start_dot{
   color: white;
   text-align: center;
   margin-top: 10px;
-  margin-bottom: 10px;
+  margin-bottom: 40px;
   width: 50px;
   height: 50px;
   border-radius: 50%;
@@ -41,8 +41,11 @@ div.end_dot{
     color: white;
     text-align:center;
 }
-.bpel_flow{ overflow-x: scroll; }
 
+.expand {
+    float: left;
+    margin: 10px 10px 10px 0px;
+}
 
 
 /* #tabContainer {
@@ -148,9 +151,9 @@ div.bpel_activity.selected, div.selected.bpel_basic_activity, div.selected.bpel_
 /* each basic and structured activity has this */
 div.bpel_activity, div.bpel_basic_activity, div.bpel_assign, div.bpel_empty, div.bpel_compensate, div.bpel_compensateScope, div.bpel_exit, div.bpel_extensionActivity, div.bpel_invoke, div.bpel_receive, div.bpel_reply, div.bpel_rethrow, div.bpel_throw, div.bpel_validate, div.bpel_wait, div.bpel_structured_activity, div.bpel_eventHandlers, div.bpel_if, div.bpel_faultHandlers, div.bpel_forEach, div.bpel_catch, div.bpel_catchAll, div.bpel_flow, div.bpel_pick, div.bpel_onAlarm, div.bpel_onEvent, div.bpel_onMessage, div.bpel_process, div.bpel_repeatUntil, div.bpel_scope, div.bpel_sequence, div.bpel_while, div.bpel_if_child, div.bpel_if_then, div.bpel_if_elseif, div.bpel_if_else {
   /* center it within parent */
-  /* margin-left: auto;
+  margin-left: auto;
   margin-right: auto;
-  10px border */
+  10px border 
   margin-top: 40px;
   margin-bottom: 40px;
   padding-left: 20px;
@@ -191,8 +194,6 @@ div.bpel_compensate:before {
 div.bpel_compensateScope:before {
   content: "\00AB compensateScope\00BB"; }
 
-div.bpel_empty:before {
-  content: "\00AB empty\00BB"; }
 
 div.bpel_exit:before {
   content: "\00AB exit\00BB"; }
