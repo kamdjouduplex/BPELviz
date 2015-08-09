@@ -280,7 +280,7 @@
             /* jsplomb code for all the internal process link*/
             var linksConnections = jsPlumb.getInstance();
             linksConnections.importDefaults({
-                Connector : ["Straight", { curviness: 65 }],
+                connector:[ "Flowchart", {stub:15} ],
                 Anchors : ["BottomCenter", "TopCenter"]
             });
 
