@@ -41,10 +41,14 @@
         
         //manipulating id of components
         
-        var obj = $( "div#parent" ).find("*");
+        // get all the div parent elements and store them in the var obj.
+        var obj = $( "div#processContainer" ).find("*");
+        
+        // this part of the code handle all the cases where there is flow component with 
+        //links. So, we are getting all the source and target link in the flow here.
         var linkObj = [];
-        console.log(links);
-        console.log(lines);
+        //console.log(links);
+        //console.log(lines);
         for (var i = 0; i < lines.length; i++) {
             for (var j = 0; j < links.length; j++) {
                 if (lines[i] === links[j]) {
@@ -53,38 +57,222 @@
                 };
             };
         };
-        console.log(linkObj);
 
-        var validArray   = [];
-        var flowArray    = [];
-        var flowSeqArray1 = [];
-        var flowSeqArray2 = [];
-        var flowSeqArray3 = [];
-        var scopeSqArray  = [];
-        var scopeSqArray1  = [];
-        var scopeSqArray2  = [];
-        var CatchAllArray1 = [];
-        var CatchAllArray2 = [];
-       var prArray      = [];
-        var startTarget  = [];
-        var fhArray      = [];
+
+        //console.log(linkObj);
+
+
+        // declaration of all the arrays used to sotre the id of each instance of the jsPlumb connection.
+        var prRootIdsArray  = [];
+        var sqRootIdsArray  = [];
+        var scRootIdsArray  = [];
+        var piRootIdsArray  = [];
+        /*var flowArray       = [];
+        var flowSeqArray1   = [];
+        var flowSeqArray2   = [];
+        var flowSeqArray3   = [];
+        var scopeSqArray    = [];
+        var scopeSqArray1   = [];
+        var scopeSqArray2   = [];
+        var CatchAllArray1  = [];
+        var CatchAllArray2  = [];
+        var prArray         = [];
+        var startTarget     = [];
+        var fhArray         = [];*/
+
+        // we declare a variable that will call the function eliminateivalidId and store it returning value
+        
         for (var i = 0; i < obj.length; i++) {
             var Id = obj[i].id;
-            if(Id.indexOf("pr-1.FH-1") == 0){
+            var prRootIdRegex = /^(pr-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+            var sqRootIdRegex = /sq(|-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+            var scRootIdRegex = /sc(|-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+            var piRootIdRegex = /pi(|-[1-9]).(|receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+            if(prRootIdRegex.test(Id)){
+                prRootIdsArray.push(Id);
+            }else if(sqRootIdRegex.test(Id)){
+                sqRootIdsArray.push(Id);
+            }else if(scRootIdRegex.test(Id)){
+                scRootIdsArray.push(Id);
+            }else if(piRootIdRegex.test(Id)){
+                piRootIdsArray.push(Id);
+            }
+        };   
+                
+console.log(piRootIdsArray);
+        var sqArray1 = [];
+        var sqArray2 = [];
+        var sqArray3 = [];
+        var sqArray4 = [];
+        var sqArray5 = [];
+        var prev     = "";
+        for (var i = 0; i < sqRootIdsArray.length; i++) {
+            var Id = sqRootIdsArray[i]
+            var occurence = Id.match(/sq/g).length;
+            switch(occurence){
+                case 1:
+                    /*var res = Id.split(".");
+                    sqArray1.push(Id);
+                    if(prev === ""){
+                        sqArray1.push(Id);
+                    }else if(prev === res[res.length-2]){
+                        sqArray1.push(Id);
+                    }else{
+                        sqArray3.push(Id);
+                    }
+                    prev = res[res.length-2]*/
+                    sqArray1.push(Id);
+                    break;
+                case 2:
+                    var regex1 = /sq\./;
+                    if(regex1.test(Id)){
+                        sqArray2.push(Id);
+                    }else{
+                        sqArray3.push(Id);
+                    }
+                    break;
+                case 3:
+                    var regex1 = /sq\./;
+                    var regex2 = /sq-1/;
+                    if(regex1.test(Id)){
+                        sqArray2.push(Id);
+                    }else if(regex2.test(Id)){
+                        sqArray3.push(Id);
+                    }else{
+                        sqArray4.push(Id);
+                    }
+                    break;
+                case 4:
+                    var regex1 = /sq\./;
+                    var regex2 = /sq-1/;
+                    var regex3 = /sq-2/;
+                    if(regex1.test(Id)){
+                        sqArray2.push(Id);
+                    }else if(regex2.test(Id)){
+                        sqArray3.push(Id);
+                    }else if(regex3.test(Id)){
+                        sqArray4.push(Id);
+                    }else{
+                        sqArray5.push(Id);
+                    }
+                    break;
+                default:
+                break;
+            }
+        };
+
+console.log("1= "+sqArray1);
+console.log("2= "+sqArray2);
+console.log("3= "+sqArray3);
+console.log("4= "+sqArray4);
+console.log("5= "+sqArray5);
+
+        var scArray1 = [];
+        var scArray1 = [];
+        var scArray2 = [];
+        var scArray3 = [];
+        var scArray4 = [];
+        var scArray5 = [];
+        for (var i = 0; i < scRootIdsArray.length; i++) {
+             var Id = scRootIdsArray[i]
+             var occurence = Id.match(/sc/g);
+             switch(occurence.length){
+                case 1:
+                    scArray1.push(Id);
+                    break;
+                case 2:
+                    scArray2.push(Id);
+                    break;
+                case 3:
+                    scArray3.push(Id);
+                    break;
+                case 4:
+                    scArray4.push(Id);
+                    break;
+                case 5:
+                    scArray5.push(Id);
+                default:
+                    break;
+             }
+         }; 
+
+        /*var piArray1 = [];
+        var piArray1 = [];
+        var piArray2 = [];
+        var piArray3 = [];
+        var piArray4 = [];
+        var piArray5 = [];
+        for (var i = 0; i < piRootIdsArray.length; i++) {
+             var Id = piRootIdsArray[i]
+             var occurence = Id.match(/pi/g);
+             switch(occurence){
+                             case 1:
+                                 /*var res = Id.split(".");
+                                 sqArray1.push(Id);
+                                 if(prev === ""){
+                                     sqArray1.push(Id);
+                                 }else if(prev === res[res.length-2]){
+                                     sqArray1.push(Id);
+                                 }else{
+                                     sqArray3.push(Id);
+                                 }
+                                 prev = res[res.length-2]
+                                 piArray1.push(Id);
+                                 break;
+                             case 2:
+                                 var regex1 = /pi\./;
+                                 if(regex1.test(Id)){
+                                     piArray2.push(Id);
+                                 }else{
+                                     piArray3.push(Id);
+                                 }
+                                 break;
+                             case 3:
+                                 var regex1 = /pi\./;
+                                 var regex2 = /pi-1/;
+                                 if(regex1.test(Id)){
+                                     piArray2.push(Id);
+                                 }else if(regex2.test(Id)){
+                                     piArray3.push(Id);
+                                 }else{
+                                     piArray4.push(Id);
+                                 }
+                                 break;
+                             case 4:
+                                 var regex1 = /pi\./;
+                                 var regex2 = /pi-1/;
+                                 var regex3 = /pi-2/;
+                                 if(regex1.test(Id)){
+                                     piArray2.push(Id);
+                                 }else if(regex2.test(Id)){
+                                     piArray3.push(Id);
+                                 }else if(regex3.test(Id)){
+                                     piArray4.push(Id);
+                                 }else{
+                                     piArray5.push(Id);
+                                 }
+                                 break;
+                             default:
+                             break;
+                         }
+
+         /*var validId = eliminateInvalideId(Id);
+            if(validId.indexOf("pr") == 0){
+                validArray.push(validId);
+            }*/
+            /*if(Id.indexOf("pr-1.FH-1") == 0){
                 var j=0
                 while(j<1){
                 startTarget.push("pr-1.FH-1");
                 j++;
                 }
-            }
-            var validId = eliminateInvalideId(Id);
-            //console.log(validId);
-            if(validId.indexOf("pr") == 0){
-                validArray.push(validId);
-            }
-        };  
-        for (var i = 0; i < validArray.length; i++) {
+            }*/
+        
+
+        
+        /*for (var i = 0; i < validArray.length; i++) {
             var Id_1 = validArray[i]
+            var prRootId  = getProcessRootIds(Id_1);
             var validId_0 = getFlowId(Id_1);
             var validId_1 = getFlowSeqId1(Id_1);
             var validId_2 = getFlowSeqId2(Id_1);
@@ -95,6 +283,7 @@
             var validId_7 = getSqScope3(Id_1);
             var validId_8 = getCatchAllAct1(Id_1);
             var validId_9 = getCatchAllAct2(Id_1);
+                prRootIdsArray.push(prRootId);
             if(validId_0.indexOf("pr") == 0){
                 flowArray.push(validId_0);
             }else if(validId_1.indexOf("pr") == 0){
@@ -119,9 +308,31 @@
                 prArray.push(validArray[i]);
             }
             
-        };
+        };*/  
+     //   console.log(prRootIdsArray);
+       // console.log(sqRootIdsArray);
+        // eliminating all the invalid Ids
+        /*function eliminateInvalideId(id){
+            validId = "";
 
-        /*remove duplicated element from startTarget array*/
+            var myRegex = /partnerLinks|variables|correlationSets|correlations|copy|toPart|fromParts|links|parent|startCounterValue|finalCounterValue|messageExchange|sources|targets/i;
+            if(myRegex.test(id)){
+            }else{
+                validId = id;
+            }
+            return validId;
+        }
+
+        // this array is to store all the process that are at the root of the process
+        function getProcessRootIds(id){
+            var rootId = "";
+            var rootIdRegex = /^(pr-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+            if(rootIdRegex.test(id)){
+                rootId = id;
+            }
+            return rootId;
+        }*/
+        /*remove duplicated element from startTarget array
         startTarget.push("pr-1.sq-1");    
         startTarget.unshift("start");
         var uniqueTargetArray = [];
@@ -129,23 +340,14 @@
             if($.inArray(el, uniqueTargetArray) === -1) uniqueTargetArray.push(el);
         });
         //console.log(uniqueTargetArray);
-        //console.log(flowSeqArray1);
-        //console.log(scopeSqArray);
-        //console.log(prArray);
+        console.log(flowSeqArray1);
+        console.log(scopeSqArray);
+        console.log(prArray);*/
 
-        function eliminateInvalideId(id){
-            validId = "";
-
-            var myRegex = /partnerLinks|invoke|variables|correlationSets|.wait-1.for|wait-1.until|correlations|copy|messageExchange|toPart|fromParts|links|parent|startCounterValue|finalCounterValue|messageExchange|sources|targets|\.fe-[1-9](\.sc$|\.sc-[1-9]$)|\.fw-([1-9])(\.sq$|\.sq-[1-9]$)|\.FH-([1-9])(catchAll$|\.catchAll-[1-9]$)/i;
-            if(myRegex.test(id)){
-            }else{
-                validId = id;
-            }
-            return validId;
-        }
-        function getFlowId(id){
+        
+        /*function getFlowId(id){
             var flowId = "";
-            var flowRegex = /\.(fw|fw-[1-9])\.(receive|assign|reply|empty|rethrow)/i;
+            var flowRegex = /\.(fw|fw-[1-9])\.(receive|assign|reply|invoke|empty|rethrow)/i;
             if(flowRegex.test(id)){
                 flowId = id;
             }
@@ -153,7 +355,7 @@
         }
         function getFHId(id){
             var fhId = "";
-            var fhRegex = /\.fh-[1-9]\.(catchAll|catchAll-[1-9])\.(receive|assign|reply|empty|compensateScope|compensate|rethrow)/i;
+            var fhRegex = /\.fh-[1-9]\.(catchAll|catchAll-[1-9])\.(receive|assign|invoke|reply|empty|compensateScope|compensate|rethrow)/i;
             if(fhRegex.test(id)){
                 fhId = id;
             }
@@ -162,7 +364,7 @@
         
         function getFlowSeqId1(id){
             var flowSeqId1 = "";
-            var flowSequenceRegex1 = /\.fw-[1-9]\.(sq)\.(receive|assign|reply|empty|rethrow)/i;
+            var flowSequenceRegex1 = /\.fw-[1-9]\.(sq)\.(receive|assign|reply|invoke|empty|rethrow)/i;
             if(flowSequenceRegex1.test(id)){
                 flowSeqId1 = id;
             }
@@ -170,7 +372,7 @@
         }
         function getFlowSeqId2(id){
             var flowSeqId2 = "";
-            var flowSequenceRegex2 = /\.fw-[1-9]\.(sq-1)\.(receive|assign|reply|empty|rethrow)/i;
+            var flowSequenceRegex2 = /\.fw-[1-9]\.(sq-1)\.(receive|assign|reply|empty|invoke|rethrow)/i;
             if(flowSequenceRegex2.test(id)){
                 flowSeqId2 = id;
             }
@@ -178,7 +380,7 @@
         }
         function getFlowSeqId3(id){
             var flowSeqId3 = "";
-            var flowSequenceRegex3 = /\.fw-[1-9]\.(sq-2)\.(receive|assign|reply|empty|rethrow)/i;
+            var flowSequenceRegex3 = /\.fw-[1-9]\.(sq-2)\.(receive|assign|reply|invoke|empty|rethrow)/i;
             if(flowSequenceRegex3.test(id)){
                 flowSeqId3 = id;
             }
@@ -194,7 +396,7 @@
         }
         function getSqScope2(id){
             var sqScope2 = "";
-            var sqScopeRegex2 = /\.sc-[1-9]\.(sq)\.(receive|assign|reply|empty|rethrow)/i;
+            var sqScopeRegex2 = /\.sc-[1-9]\.(sq)\.(receive|assign|reply|empty|invoke|rethrow)/i;
             if(sqScopeRegex2.test(id)){
                 sqScope2 = id;
             }
@@ -202,7 +404,7 @@
         }
         function getSqScope3(id){
             var sqScope3 = "";
-            var sqScopeRegex3 = /\.sc-[1-9]\.(sq-1)\.(receive|assign|reply|empty|rethrow)/i;
+            var sqScopeRegex3 = /\.sc-[1-9]\.(sq-1)\.(receive|assign|invoke|reply|empty|rethrow)/i;
             if(sqScopeRegex3.test(id)){
                 sqScope3 = id;
             }
@@ -211,7 +413,7 @@
 
         function getCatchAllAct1(id){
             var catAll = "";
-            var catAllRegex = /\.catchAll\.(receive|assign|reply|empty|rethrow)/i;
+            var catAllRegex = /\.catchAll\.(receive|assign|reply|empty|invoke|rethrow)/i;
             if(catAllRegex.test(id)){
                 catAll = id;
             }
@@ -219,48 +421,135 @@
         }
         function getCatchAllAct2(id){
             var catAll = "";
-            var catAllRegex = /\.catchAll-[1-9]\.(receive|assign|reply|empty|rethrow)/i;
+            var catAllRegex = /\.catchAll-[1-9]\.(receive|assign|reply|invoke|empty|rethrow)/i;
             if(catAllRegex.test(id)){
                 catAll = id;
             }
             return catAll;
-        }
+        }*/
+        
+        
+        
         
 
         //jsblomp code goes here
         jsPlumb.bind("ready", function() {        
-          // your jsPlumb related init code goes here
-          /* jsplomb code for the start link*/
-          var firstInstance = jsPlumb.getInstance();
-            firstInstance.importDefaults({
+          // jsplomb code for all the elements that are directly under the root element of the process
+            var prRootIdsConnection = jsPlumb.getInstance();
+            prRootIdsConnection.importDefaults({
               Connector : [ "Straight", { curviness: 150 } ],
               Anchors : [ "BottomCenter", "TopCenter" ],
             });
-            for (var i = 0; i < uniqueTargetArray.length; i++) {
-                firstInstance.connect({
-                    source: uniqueTargetArray[i],
-                    target: uniqueTargetArray[i+1],
-                    overlays:[ 
-                                ["Arrow" , { width:25, length:25, location:1 }]
-                            ]
+            for (var i = 0; i < prRootIdsArray.length; i++) {
+                prRootIdsConnection.connect({
+                    source: prRootIdsArray[i],
+                    target: prRootIdsArray[i+1],
+                    overlays:[["Arrow" , { width:25, length:25, location:1 }]] 
                 })
             };
 
-            /* jsplomb code for the end link*/
-            var secondInstance = jsPlumb.getInstance();
-            secondInstance.importDefaults({
+            // jsplomb code for the start link
+            var startconnection = jsPlumb.getInstance();
+            startconnection.importDefaults({
                 Connector : [ "Straight", { curviness: 150 } ],
                 Anchors : [ "BottomCenter", "TopCenter" ]
             });
-            secondInstance.connect({ 
-              source:"pr-1.sq-1", 
-              target:"end", 
-              overlays:[ 
-                                ["Arrow" , { width:25, length:25, location:1 }]
-                            ]   
+            startconnection.connect({ 
+              source: "start", 
+              target: prRootIdsArray[0], 
+              overlays:[["Arrow" , { width:25, length:25, location:1 }]]   
             });
-            
-            /* jsplomb code for all the internal process link*/
+
+            // jsplomb code for the end link
+            var lastArrayItem = prRootIdsArray.length-1;
+            var endconnection = jsPlumb.getInstance();
+            endconnection.importDefaults({
+                Connector : [ "Straight", { curviness: 150 } ],
+                Anchors : [ "BottomCenter", "TopCenter" ]
+            });
+            endconnection.connect({ 
+              source: prRootIdsArray[lastArrayItem], 
+              target:"end", 
+              overlays:[["Arrow" , { width:25, length:25, location:1 }]]    
+            });
+          
+          // jsplomb code for all the elements that are directly under the root element of the sequence
+            var sqConnection1 = jsPlumb.getInstance();
+            sqConnection1.importDefaults({
+              Connector : [ "Straight", { curviness: 150 } ],
+              Anchors : [ "BottomCenter", "TopCenter" ],
+            });
+            for (var i = 0; i < sqArray1.length; i++) {
+                sqConnection1.connect({
+                    source: sqArray1[i],
+                    target: sqArray1[i+1],
+                    overlays:[["Arrow" , { width:25, length:25, location:1 }]] 
+                })
+            };
+            var sqConnection2 = jsPlumb.getInstance();
+            sqConnection2.importDefaults({
+              Connector : [ "Straight", { curviness: 150 } ],
+              Anchors : [ "BottomCenter", "TopCenter" ],
+            });
+            for (var i = 0; i < sqArray2.length; i++) {
+                sqConnection2.connect({
+                    source: sqArray2[i],
+                    target: sqArray2[i+1],
+                    overlays:[["Arrow" , { width:25, length:25, location:1 }]] 
+                })
+            };
+            var sqConnection3 = jsPlumb.getInstance();
+            sqConnection3.importDefaults({
+              Connector : [ "Straight", { curviness: 150 } ],
+              Anchors : [ "BottomCenter", "TopCenter" ],
+            });
+            for (var i = 0; i < sqArray3.length; i++) {
+                sqConnection3.connect({
+                    source: sqArray3[i],
+                    target: sqArray3[i+1],
+                    overlays:[["Arrow" , { width:25, length:25, location:1 }]] 
+                })
+            };
+            var sqConnection4 = jsPlumb.getInstance();
+            sqConnection4.importDefaults({
+              Connector : [ "Straight", { curviness: 150 } ],
+              Anchors : [ "BottomCenter", "TopCenter" ],
+            });
+            for (var i = 0; i < sqArray4.length; i++) {
+                sqConnection4.connect({
+                    source: sqArray4[i],
+                    target: sqArray4[i+1],
+                    overlays:[["Arrow" , { width:25, length:25, location:1 }]] 
+                })
+            };
+            var sqConnection5 = jsPlumb.getInstance();
+            sqConnection5.importDefaults({
+              Connector : [ "Straight", { curviness: 150 } ],
+              Anchors : [ "BottomCenter", "TopCenter" ],
+            });
+            for (var i = 0; i < sqArray5.length; i++) {
+                sqConnection5.connect({
+                    source: sqArray5[i],
+                    target: sqArray5[i+1],
+                    overlays:[["Arrow" , { width:25, length:25, location:1 }]] 
+                })
+            };
+
+              // jsplomb code for all the elements that are directly under the root element of the sequence
+              var piConnection1 = jsPlumb.getInstance();
+              piConnection1.importDefaults({
+                Connector : [ "Straight", { curviness: 150 } ],
+                Anchors : [ "BottomCenter", "TopCenter" ],
+              });
+              for (var i = 0; i < piRootIdsArray.length; i++) {
+                  piConnection1.connect({
+                      source: piRootIdsArray[i],
+                      target: piRootIdsArray[i+1],
+                      overlays:[["Arrow" , { width:25, length:25, location:1 }]] 
+                  })
+              };
+              
+            /*// jsplomb code for all the internal process link
             var interconnection = jsPlumb.getInstance();
             interconnection.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -276,8 +565,9 @@
                             ]
                 })
             };
-            
-            /* jsplomb code for all the internal process link*/
+            */
+            console.log("test:"+linkObj);
+            // jsplomb code for all the internal process link
             var linksConnections = jsPlumb.getInstance();
             linksConnections.importDefaults({
                 connector:[ "Flowchart", {stub:15} ],
@@ -295,7 +585,7 @@
                 })
             };
 
-            /* jsplomb code for the first flow sequence link*/
+            /*// jsplomb code for the first flow sequence link
             var flowSeqConnection1 = jsPlumb.getInstance();
             flowSeqConnection1.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -312,7 +602,7 @@
                 })
             };
 
-            /* jsplomb code for the second flow sequence link*/
+            // jsplomb code for the second flow sequence link
             var flowSeqConnection2 = jsPlumb.getInstance();
             flowSeqConnection2.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -329,7 +619,7 @@
                 })
             };
 
-            /* jsplomb code for the tirdth flow sequence link*/
+            // jsplomb code for the tirdth flow sequence link
             var flowSeqConnection3 = jsPlumb.getInstance();
             flowSeqConnection3.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -346,7 +636,7 @@
                 })
             };
 
-            /* jsplomb code for the fault handler link*/
+            // jsplomb code for the fault handler link
             var fhConnection = jsPlumb.getInstance();
             fhConnection.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -363,7 +653,7 @@
                 })
             };
 
-            /* jsplomb code for the sequence of scope link*/
+            // jsplomb code for the sequence of scope link
             var scopeSqConnection = jsPlumb.getInstance();
             scopeSqConnection.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -380,7 +670,7 @@
                 })
             };
 
-            /* jsplomb code for the sequence1 of scope link*/
+            // jsplomb code for the sequence1 of scope link
             var scopeSqConnection1 = jsPlumb.getInstance();
             scopeSqConnection1.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -397,7 +687,7 @@
                 })
             };
 
-            /* jsplomb code for the sequence2 of scope link*/
+            // jsplomb code for the sequence2 of scope link
             var scopeSqConnection2 = jsPlumb.getInstance();
             scopeSqConnection2.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -414,7 +704,7 @@
                 })
             };
 
-            /* jsplomb code for the sequence2 of scope link*/
+            // jsplomb code for the sequence2 of scope link
             var catchAllConnection1 = jsPlumb.getInstance();
             catchAllConnection1.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -430,7 +720,7 @@
                             ]
                 })
             };
-            /* jsplomb code for the sequence2 of scope link*/
+            // jsplomb code for the sequence2 of scope link
             var catchAllConnection2 = jsPlumb.getInstance();
             catchAllConnection2.importDefaults({
                 Connector : ["Straight", { curviness: 65 }],
@@ -445,10 +735,10 @@
                                 ["Arrow" , { width:25, length:25, location:1 }]
                             ]
                 })
-            };
+            };*/
 
         });
-
+        
         // enable mouseover on elements
         $(".bpel").on("click", function(event) {
             // determine id of element

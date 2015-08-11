@@ -77,7 +77,7 @@
     </xsl:template>
 
     <xsl:template match="bpel:if">
-        <div class="bpel_if">
+        <div id="{bpelviz:deriveIdentifier(.)}" class="bpel_if">
             <xsl:apply-templates select="@*"/>
 				<div class="bpel">
 	                <xsl:apply-templates select="bpel:condition"/>
@@ -99,7 +99,7 @@
         <xsl:variable name="actId" select="bpelviz:deriveIdentifier(.)"/>
         <xsl:variable name="flow">
             <xsl:analyze-string select="$actId" 
-                regex="^(pr-[1-9])\.sq-[1-9]\.fw-[1-9]\.(receive|assign|reply|empty|sq)($|-[1-9]$)">
+                regex="^(pr-[1-9])\.sq-[1-9]\.fw-[1-9]\.(receive|assign|reply|empty|sq|pi|if|invoke)($|-[1-9]$)">
                <xsl:matching-substring>
                 <xsl:value-of select="$actId"/>
               </xsl:matching-substring>
