@@ -32,44 +32,41 @@
                 <script>
                     require.config({
                     paths: {
-                        "jquery": "http://codeorigin.jquery.com/jquery-2.0.3.min",
-                        "bootstrap3": "http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min"
+                    "jquery": "http://codeorigin.jquery.com/jquery-2.0.3.min",
+                    "bootstrap3": "http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min"
                     },
                     shim: {
-                        "bootstrap3": ["jquery"]
+                    "bootstrap3": ["jquery"]
                     }});
                 </script>
-    			<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-    			<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+                <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+                <link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
                 <link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
                 <link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeEclipse.css" rel="stylesheet" type="text/css" />
                 <link href="BPELviz.css" rel="stylesheet" type="text/css"/>
-    		</head>
-    		<body>
-                <!-- <script type="text/javascript">
-                    var lines =[];
-                    var links = [];
-                </script> -->
-    			<div class="container">
-    				<div class="row">
-    					<div id="processContainer">
-    						<div class="bpel_process bpel">
-    							<div id="start" class="start_dot bpel"><br/>start</div>
-    							<xsl:apply-templates select="@* | node()"/>
-    							<div id="end" class="end_dot bpel"><br/>end</div>
-    						</div>
-    					</div>
-    				</div>
-    			</div>
-    			<script>
-    				require(["BPELviz"], function(renderer) {
-    					renderer.initialize();
-    				});
-    				SyntaxHighlighter.all();
-    			</script>        
-    		</body>
-        </html>
-    </xsl:template>
+            </head>
+            <body>
+             <div class="container">
+                <div class="row">
+                   <div id="processContainer">
+                      <div class="bpel_process bpel">
+                         <div id="start" class="start_dot bpel"><br/>start</div>
+                         <xsl:apply-templates select="@* | node()"/>
+                         <div id="end" class="end_dot bpel"><br/>end</div>
+                     </div>
+                 </div>
+             </div>
+         </div>
+         <script>
+            require(["BPELviz"], function(renderer) {
+            renderer.initialize();
+            });
+            SyntaxHighlighter.all();
+        </script>        
+    </body>
+</html>
+</xsl:template>
+    
     <xsl:template match="bpel:condition">
         <div class="bpel_condition">
             <xsl:value-of select="."/>
@@ -79,45 +76,35 @@
     <xsl:template match="bpel:if">
         <div id="{bpelviz:deriveIdentifier(.)}" class="bpel_if">
             <xsl:apply-templates select="@*"/>
-				<div class="bpel">
-	                <xsl:apply-templates select="bpel:condition"/>
-	                <xsl:apply-templates select="child[not(bpel:condition or bpel:else or bpel:elseif)]"/>
-	            </div>
-            <xsl:apply-templates select="bpel:elseif"/>
-            <xsl:apply-templates select="bpel:else"/>
-        </div>
-    </xsl:template>
+            <div class="bpel">
+               <xsl:apply-templates select="bpel:condition"/>
+               <xsl:apply-templates select="child[not(bpel:condition or bpel:else or bpel:elseif)]"/>
+           </div>
+           <xsl:apply-templates select="bpel:elseif"/>
+           <xsl:apply-templates select="bpel:else"/>
+       </div>
+   </xsl:template>
 
     <!-- managing the id generation -->
     <xsl:template match="bpel:*">
         <xsl:variable name="source" select="./bpel:sources/bpel:source/@linkName"/>
         <xsl:variable name="target" select="./bpel:targets/bpel:target/@linkName"/>
-        <xsl:variable name="__name2" select="@name"/>
-        <xsl:variable name="__id2" select="bpelviz:deriveIdentifier(.)"/>
-        <!-- <script type="text/javascript">
-            links.push('<xsl:value-of select="$__id2"/>');
-            links.push('<xsl:value-of select="$__name2"/>');
-        </script> -->
         <xsl:variable name="actId" select="bpelviz:deriveIdentifier(.)"/>
         <xsl:variable name="flow">
             <xsl:analyze-string select="$actId" 
                 regex="^(pr-[1-9])\.sq-[1-9]\.fw-[1-9]\.(receive|assign|reply|empty|sq|pi|if|invoke)($|-[1-9]$)">
-               <xsl:matching-substring>
-                <xsl:value-of select="$actId"/>
-              </xsl:matching-substring>
+                <xsl:matching-substring>
+                    <xsl:value-of select="$actId"/>
+                </xsl:matching-substring>
             </xsl:analyze-string> 
         </xsl:variable>   
-         <xsl:choose>
-
-
+        <xsl:choose>
             <xsl:when test="$actId = $flow">
-
-
-                    <div id="{bpelviz:deriveIdentifier(.)}" data-source="{$source}"  data-target="{$target}" class="bpel expand bpel_{fn:local-name()}">
-                        <div id="parent" class="content">
-                            <xsl:apply-templates select="@* | node()"/>
-                        </div>
+                <div id="{bpelviz:deriveIdentifier(.)}" data-source="{$source}"  data-target="{$target}" class="bpel expand bpel_{fn:local-name()}">
+                    <div id="parent" class="content">
+                        <xsl:apply-templates select="@* | node()"/>
                     </div>
+                </div>
             </xsl:when>
             <xsl:otherwise>
                 <div id="{bpelviz:deriveIdentifier(.)}" data-source="{$source}"  data-target="{$target}" class="bpel bpel_{fn:local-name()}">
@@ -131,32 +118,32 @@
 
     
     <!-- end of id generation --> 
-<xsl:template match="attribute::name">
-    <xsl:variable name="name" select="./name(..)"/>
+    <xsl:template match="attribute::name">
+        <xsl:variable name="name" select="./name(..)"/>
         <xsl:choose>
             <xsl:when test="$name='process'">
                 <div class="bpel_name">
-                <xsl:value-of select="."/>
+                    <xsl:value-of select="."/>
                 </div>
             </xsl:when>
             <xsl:when test="$name='flow'">
                 <div class="bpel_name">
-                <xsl:value-of select="."/>
+                    <xsl:value-of select="."/>
                 </div>
             </xsl:when>
             <xsl:when test="$name='forEach'">
                 <div class="bpel_name">
-                <xsl:value-of select="."/>
+                    <xsl:value-of select="."/>
                 </div>
             </xsl:when>
             <xsl:when test="$name='scope'">
                 <div class="bpel_name">
-                <xsl:value-of select="."/>
+                    <xsl:value-of select="."/>
                 </div>
             </xsl:when>
             <xsl:when test="$name='pick'">
                 <div class="bpel_name">
-                <xsl:value-of select="."/>
+                    <xsl:value-of select="."/>
                 </div>
             </xsl:when>
             <xsl:otherwise>
@@ -202,27 +189,13 @@
                     <div class="col-xs-1">
                         <span class="glyphicon glyphicon-ok icone"></span>
                     </div>
-                  </div>
                 </div>
-            </xsl:otherwise>
-        </xsl:choose>
-    </xsl:template>
-    
-    <xsl:template match="//bpel:links/bpel:link">
-        <xsl:variable name="__link" select="@name"/>
-        <xsl:for-each select="//node()[bpel:sources/bpel:source[@linkName=$__link]]">
-            <xsl:variable name="__source" select="@name"/>
-            <xsl:for-each select="//node()[bpel:targets/bpel:target[@linkName=$__link]]">
-                <xsl:variable name="__target" select="@name"/>
-                <!-- <script type="text/javascript">
-                    lines.push('<xsl:value-of select="$__source"/>');
-                    lines.push('<xsl:value-of select="$__target"/>');
-                </script> -->
-            </xsl:for-each>
-        </xsl:for-each>
-    </xsl:template>
+            </div>
+        </xsl:otherwise>
+    </xsl:choose>
+</xsl:template>
+
     <!-- Override default template for copying text -->
     <xsl:template match="text()|@*"/>
-
 
 </xsl:stylesheet>
