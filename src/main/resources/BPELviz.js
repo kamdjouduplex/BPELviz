@@ -40,14 +40,68 @@
         });
         
         //manipulating id of components
-        
+        var flink = {};
+        var divs = $("div.bpel");
+        for (var i = 0; i < divs.length; i++) {
+             var div = divs[i];
+            var sources = $(div).attr("data-source");
+            if(sources == undefined){
+                continue;
+            }
+            if(sources.length == 0){
+                continue;
+            }
+            sources = sources.split(" ");
+            for (var j = 0; j < sources.length; j++) {
+                var link = sources[j];
+                //console.log(div.id + " "+ link);
+                if(flink[link] == undefined){
+                    flink[link]={};
+                }
+                flink[link]["source"] = div.id;
+            };
+            
+        };
+
+
+        for (var i = 0; i < divs.length; i++) {
+             var div = divs[i];
+            var sources = $(div).attr("data-target");
+            if(sources == undefined){
+                continue;
+            }
+            if(sources.length == 0){
+                continue;
+            }
+            sources = sources.split(" ");
+            for (var j = 0; j < sources.length; j++) {
+                var link = sources[j];
+                //console.log(div.id + " "+ link);
+                if(flink[link] == undefined){
+                    flink[link]={};
+                }
+                flink[link]["target"] = div.id;
+            };
+            
+        };
+
+var lines =[];
+        $.each(flink, function(linkname){
+                var link = flink[linkname];
+                console.log(link.source + "/"+ linkname + "/"+ link.target);
+                lines.push(link.source);
+                lines.push(link.target);
+
+        });
+
+
         // get all the div parent elements and store them in the var obj.
         var obj = $( "div#processContainer" ).find("*");
         
         // this part of the code handle all the cases where there is flow component with 
         //links. So, we are getting all the source and target link in the flow here.
-        var linkObj = [];
-        //console.log(links);
+        /*var linkObj = [];
+        console.log("Links here"+links);
         //console.log(lines);
         for (var i = 0; i < lines.length; i++) {
             for (var j = 0; j < links.length; j++) {
@@ -56,7 +110,7 @@
                     break;
                 };
             };
-        };
+        };*/
 
 
         //console.log(linkObj);
@@ -566,7 +620,7 @@ console.log("5= "+sqArray5);
                 })
             };
             */
-            console.log("test:"+linkObj);
+            //console.log("test:"+linkObj);
             // jsplomb code for all the internal process link
             var linksConnections = jsPlumb.getInstance();
             linksConnections.importDefaults({
@@ -574,10 +628,10 @@ console.log("5= "+sqArray5);
                 Anchors : ["BottomCenter", "TopCenter"]
             });
 
-            for (var i = 0; i < linkObj.length; i=i+2) {
+            for (var i = 0; i < lines.length; i=i+2) {
                 linksConnections.connect({
-                    source: linkObj[i],
-                    target: linkObj[i+1],
+                    source: lines[i],
+                    target: lines[i+1],
                     paintStyle:{ strokeStyle:"blue", lineWidth:4 },
                     overlays:[ 
                                 ["Arrow" , { width:25, length:25, location:1 }]

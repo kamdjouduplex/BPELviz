@@ -46,10 +46,10 @@
                 <link href="BPELviz.css" rel="stylesheet" type="text/css"/>
     		</head>
     		<body>
-                <script type="text/javascript">
+                <!-- <script type="text/javascript">
                     var lines =[];
                     var links = [];
-                </script>
+                </script> -->
     			<div class="container">
     				<div class="row">
     					<div id="processContainer">
@@ -90,12 +90,14 @@
 
     <!-- managing the id generation -->
     <xsl:template match="bpel:*">
+        <xsl:variable name="source" select="./bpel:sources/bpel:source/@linkName"/>
+        <xsl:variable name="target" select="./bpel:targets/bpel:target/@linkName"/>
         <xsl:variable name="__name2" select="@name"/>
         <xsl:variable name="__id2" select="bpelviz:deriveIdentifier(.)"/>
-        <script type="text/javascript">
+        <!-- <script type="text/javascript">
             links.push('<xsl:value-of select="$__id2"/>');
             links.push('<xsl:value-of select="$__name2"/>');
-        </script>
+        </script> -->
         <xsl:variable name="actId" select="bpelviz:deriveIdentifier(.)"/>
         <xsl:variable name="flow">
             <xsl:analyze-string select="$actId" 
@@ -106,15 +108,19 @@
             </xsl:analyze-string> 
         </xsl:variable>   
          <xsl:choose>
+
+
             <xsl:when test="$actId = $flow">
-                    <div id="{bpelviz:deriveIdentifier(.)}" class="bpel expand bpel_{fn:local-name()}">
+
+
+                    <div id="{bpelviz:deriveIdentifier(.)}" data-source="{$source}"  data-target="{$target}" class="bpel expand bpel_{fn:local-name()}">
                         <div id="parent" class="content">
                             <xsl:apply-templates select="@* | node()"/>
                         </div>
                     </div>
             </xsl:when>
             <xsl:otherwise>
-                <div id="{bpelviz:deriveIdentifier(.)}" class="bpel bpel_{fn:local-name()}">
+                <div id="{bpelviz:deriveIdentifier(.)}" data-source="{$source}"  data-target="{$target}" class="bpel bpel_{fn:local-name()}">
                     <div id="parent" class="content">
                         <xsl:apply-templates select="@* | node()"/>
                     </div>
@@ -208,10 +214,10 @@
             <xsl:variable name="__source" select="@name"/>
             <xsl:for-each select="//node()[bpel:targets/bpel:target[@linkName=$__link]]">
                 <xsl:variable name="__target" select="@name"/>
-                <script type="text/javascript">
+                <!-- <script type="text/javascript">
                     lines.push('<xsl:value-of select="$__source"/>');
                     lines.push('<xsl:value-of select="$__target"/>');
-                </script>
+                </script> -->
             </xsl:for-each>
         </xsl:for-each>
     </xsl:template>
