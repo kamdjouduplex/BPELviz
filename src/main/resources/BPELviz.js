@@ -1,4 +1,6 @@
-// AMD and non-AMD compatiblitiy inspired by http://tkareine.org/blog/2012/08/11/why-javascript-needs-module-definitions/ and https://github.com/blueimp/jQuery-File-Upload/blob/9.5.0/js/jquery.fileupload.js
+// AMD and non-AMD compatiblitiy inspired by 
+//http://tkareine.org/blog/2012/08/11/why-javascript-needs-module-definitions/ and 
+//https://github.com/blueimp/jQuery-File-Upload/blob/9.5.0/js/jquery.fileupload.js
 (function(factory) {
     if (typeof define === 'function' && define.amd) {
         // Register as named AMD module. Anonymous registering causes "Mismatched anonymous define() module" in requirejs 2.9.1 when script is loaded explicitly and then loaded with requirejs
@@ -38,36 +40,44 @@
             return false;
         });
         
-        //manipulating id of components
+        /*
+        /* To handle linking of the DOM using JSPlumb we need the Id's of each element
+        /* Here is the part of code to get all the ids
+        */
+
+        /************************ start source-target Id handler **********************************/
+
+        var divs = $("div.bpel"); // we get all the div element that content the class bpel to the divs object
         var flink = {};
-        var divs = $("div.bpel");
+        
         for (var i = 0; i < divs.length; i++) {
-             var div = divs[i];
-            var sources = $(div).attr("data-source");
+            var div = divs[i];
+            var sources = $(div).attr("data-source"); // we get all datasource attribute values as an array.
             if(sources == undefined){
-                continue;
+                continue;  // we check for every div with data-source value undefined and skip
             }
             if(sources.length == 0){
-                continue;
+                continue;  // Also we skip all div with data-source value empty
             }
+
             sources = sources.split(" ");
-            for (var j = 0; j < sources.length; j++) {
-                var link = sources[j];
-                if(flink[link] == undefined){
-                    flink[link]={};
-                }
-                flink[link]["source"] = div.id;
-            };
-            
+            for (var j = 0; j < sources.length; j++) {     
+                var link = sources[j];                     // At this point we split the  
+                if(flink[link] == undefined){              // sources array to get each element  
+                    flink[link]={};                        // and store his id as key: value
+                }                                          // object in the array flink
+                flink[link]["source"] = div.id;            // this finally get something like 
+            };                                             // buyToSettle: { source: pr-1.sq-1.fw-1.sq-1.receive-1}
+                                                           
         };
 
 
         for (var i = 0; i < divs.length; i++) {
              var div = divs[i];
-            var sources = $(div).attr("data-target");
-            if(sources == undefined){
-                continue;
-            }
+            var sources = $(div).attr("data-target");     // Here we did exactly the same thing except 
+            if(sources == undefined){                     // that here we are handled target
+                continue;                                 // so we will end up with somthing like this
+            }                                             // buyToSettle: { target: "pr-1.sq-1.fw-1.empty-1"}
             if(sources.length == 0){
                 continue;
             }
@@ -83,30 +93,34 @@
         };
 
         var lines =[];
-        $.each(flink, function(linkname){
-            var link = flink[linkname];
-            console.log(link.source + "/"+ linkname + "/"+ link.target);
-            lines.push(link.source);
-            lines.push(link.target);
+        $.each(flink, function(linkname){           // and finally we push the two and get this
+            var link = flink[linkname];             //  buyToSettle: {
+            lines.push(link.source);                //                 source: "pr-1.sq-1.fw-1.sq-1.receive-1"   
+            lines.push(link.target);                //                 target: "pr-1.sq-1.fw-1.empty-1"
+        });                                         //               }
 
-        });
 
-        // get all the div parent elements and store them in the var obj.
+/******************* end source-target Id handler ************************************************/
+
+
+/**************** declaration of variables to use for the rest of ids ***************************/
+/******************* and strating of the id handler of the rest of linking **********************/
+
         var obj = $( "div#processContainer" ).find("*");
-        // declaration of all the arrays used to sotre the id of each instance of the jsPlumb connection.
         var prRootIdsArray  = [];
         var sqRootIdsArray  = [];
         var scRootIdsArray  = [];
         var piRootIdsArray  = [];
- 
-        // we declare a variable that will call the function eliminateivalidId and store it returning value
+        var prRootIdRegex = /^(pr-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+        var sqRootIdRegex = /sq(|-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+        var scRootIdRegex = /sc(|-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+        var piRootIdRegex = /pi(|-[1-9]).(|receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
+
+
         
+        // looping the obj to check a push each id that match the regular expression defined above
         for (var i = 0; i < obj.length; i++) {
             var Id = obj[i].id;
-            var prRootIdRegex = /^(pr-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
-            var sqRootIdRegex = /sq(|-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
-            var scRootIdRegex = /sc(|-[1-9]).(receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
-            var piRootIdRegex = /pi(|-[1-9]).(|receive|assign|reply|invoke|empty|rethrow|catchAll|catch|compensate|exit|compensateScope|throw|validate|wait|if|extensionActivity|sq|sc|CH|else|elif|EH|FH|fw|fe|oA|oE|oM|pi|pr|ru|TH|w)($|-[1-9]$)/i;
             if(prRootIdRegex.test(Id)){
                 prRootIdsArray.push(Id);
             }else if(sqRootIdRegex.test(Id)){
@@ -118,7 +132,6 @@
             }
         };   
                 
-console.log(piRootIdsArray);
         var sqArray1 = [];
         var sqArray2 = [];
         var sqArray3 = [];
@@ -130,16 +143,6 @@ console.log(piRootIdsArray);
             var occurence = Id.match(/sq/g).length;
             switch(occurence){
                 case 1:
-                    /*var res = Id.split(".");
-                    sqArray1.push(Id);
-                    if(prev === ""){
-                        sqArray1.push(Id);
-                    }else if(prev === res[res.length-2]){
-                        sqArray1.push(Id);
-                    }else{
-                        sqArray3.push(Id);
-                    }
-                    prev = res[res.length-2]*/
                     sqArray1.push(Id);
                     break;
                 case 2:
@@ -180,11 +183,6 @@ console.log(piRootIdsArray);
             }
         };
 
-/*console.log("1= "+sqArray1);
-console.log("2= "+sqArray2);
-console.log("3= "+sqArray3);
-console.log("4= "+sqArray4);
-console.log("5= "+sqArray5);*/
 
         var scArray1 = [];
         var scArray1 = [];
@@ -214,6 +212,12 @@ console.log("5= "+sqArray5);*/
                     break;
              }
          }; 
+
+
+/************************* end rest of id code *************************************************/
+
+/***********************************************************************************************/
+/****************************Start JsPlumb handler *********************************************/
 
         //jsblomp code goes here
         jsPlumb.bind("ready", function() {        
@@ -352,7 +356,9 @@ console.log("5= "+sqArray5);*/
 
             
         });
-        
+
+/********************************end jsplumb handler******************************************/
+     
         // enable mouseover on elements
         $(".bpel").on("click", function(event) {
             // determine id of element

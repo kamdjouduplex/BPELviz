@@ -32,40 +32,40 @@
                 <script>
                     require.config({
                     paths: {
-                    "jquery": "http://codeorigin.jquery.com/jquery-2.0.3.min",
-                    "bootstrap3": "http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min"
+                        "jquery": "http://codeorigin.jquery.com/jquery-2.0.3.min",
+                        "bootstrap3": "http://netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min"
                     },
                     shim: {
-                    "bootstrap3": ["jquery"]
+                        "bootstrap3": ["jquery"]
                     }});
                 </script>
-                <link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
-                <link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
+    			<link href="http://netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css" rel="stylesheet" type="text/css"/>
+    			<link href="http://alexgorbatchev.com/pub/sh/current/styles/shCore.css" rel="stylesheet" type="text/css" />
                 <link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeDefault.css" rel="stylesheet" type="text/css" />
                 <link href="http://alexgorbatchev.com/pub/sh/current/styles/shThemeEclipse.css" rel="stylesheet" type="text/css" />
                 <link href="BPELviz.css" rel="stylesheet" type="text/css"/>
-            </head>
-            <body>
-             <div class="container">
-                <div class="row">
-                   <div id="processContainer">
-                      <div class="bpel_process bpel">
-                         <div id="start" class="start_dot bpel"><br/>start</div>
-                         <xsl:apply-templates select="@* | node()"/>
-                         <div id="end" class="end_dot bpel"><br/>end</div>
-                     </div>
-                 </div>
-             </div>
-         </div>
-         <script>
-            require(["BPELviz"], function(renderer) {
-            renderer.initialize();
-            });
-            SyntaxHighlighter.all();
-        </script>        
-    </body>
-</html>
-</xsl:template>
+    		</head>
+    		<body>
+    			<div class="container">
+    				<div class="row">
+    					<div id="processContainer">
+    						<div class="bpel_process bpel">
+    							<div id="start" class="start_dot bpel"><br/>start</div>
+    							<xsl:apply-templates select="@* | node()"/>
+    							<div id="end" class="end_dot bpel"><br/>end</div>
+    						</div>
+    					</div>
+    				</div>
+    			</div>
+    			<script>
+    				require(["BPELviz"], function(renderer) {
+    					renderer.initialize();
+    				});
+    				SyntaxHighlighter.all();
+    			</script>        
+    		</body>
+        </html>
+    </xsl:template>
     
     <xsl:template match="bpel:condition">
         <div class="bpel_condition">
