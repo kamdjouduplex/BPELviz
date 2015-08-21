@@ -90,7 +90,7 @@
         <xsl:variable name="source" select="./bpel:sources/bpel:source/@linkName"/>
         <xsl:variable name="target" select="./bpel:targets/bpel:target/@linkName"/>
         <xsl:variable name="actId" select="bpelviz:deriveIdentifier(.)"/>
-        <xsl:variable name="flow">
+        <xsl:variable name="flow">  <!-- the flow variable store all the first element in the flow --> 
             <xsl:analyze-string select="$actId" 
                 regex="^(pr-[1-9])\.sq-[1-9]\.fw-[1-9]\.(receive|assign|reply|empty|sq|pi|if|invoke)($|-[1-9]$)">
                 <xsl:matching-substring>
@@ -149,7 +149,7 @@
             <xsl:otherwise>
                 <div class="bpel_name">
                   <div class="row">
-                    <div class="col-xs-1">
+                    <div class="col-xs-1"><!-- we add the icon to all activity except pr, sq, sc, pic etc -->
                         <xsl:choose>
                             <xsl:when test="$name='assign'">
                                 <span class="glyphicon glyphicon-arrow-right"></span>

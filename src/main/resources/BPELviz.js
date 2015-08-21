@@ -131,7 +131,10 @@
                 piRootIdsArray.push(Id);
             }
         };   
-                
+        
+        // here each array is to store all the ids that are containing in a squence
+        // I check if there is more than one sequence and restore them in the number of 
+        // differents array depending of the number of sequence element that exist in the process      
         var sqArray1 = [];
         var sqArray2 = [];
         var sqArray3 = [];
@@ -184,6 +187,7 @@
         };
 
 
+        // Here is the same thing as the sequence above except that this is handled scope
         var scArray1 = [];
         var scArray1 = [];
         var scArray2 = [];
@@ -322,7 +326,7 @@
                 })
             };
 
-              // jsplomb code for all the elements that are directly under the root element of the sequence
+              // jsplomb code for all the elements that are directly under the root element of the pick
               var piConnection1 = jsPlumb.getInstance();
               piConnection1.importDefaults({
                 Connector : [ "Straight", { curviness: 150 } ],
@@ -396,21 +400,3 @@
     return module;
 }));
 
-/*function hasMoreThanOneSq(id){
-            var flowSequenceRegex  = /\.fw-[1-9]\.(sq-[1-9])\.(receive|assign|reply|empty)/i;
-            if(flowSequenceRegex.test(id)){
-                var arr = id.split("."); 
-                for(var i=0;i<arr.length;i++){ 
-                    if(i>1){ 
-                        if(arr[i].indexOf("fw") > -1){
-                            if(arr[i+1].indexOf("sq") > -1){
-                                var n = arr[i+1].split("-")[1];
-                            }
-                        }
-                    }
-                }
-            }
-            if (n>1) {
-                return true;
-            };
-        }*/
